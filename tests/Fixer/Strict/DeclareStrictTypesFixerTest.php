@@ -162,27 +162,27 @@ declare/* A b C*/(strict_types=1);
 namespace A\B\C;
 class A {
 }',
-                self::$configurationRelocateNextLine
+                self::$configurationRelocateNextLine,
             ],
             [
                 '<?php
 declare/* A b C*/(strict_types=1);',
                 null,
-                self::$configurationRelocateNextLine
+                self::$configurationRelocateNextLine,
             ],
             [
                 '<?php
 deClarE(strict_types=1)
 /**/ /**/       ?>Test',
                 '<?php /**/ /**/ deClarE  (STRICT_TYPES=1)    ?>Test',
-                self::$configurationRelocateNextLine
+                self::$configurationRelocateNextLine,
             ],
             [
                 '<?php
 DECLARE(strict_types=1);
                        ',
                 '<?php            DECLARE  (    strict_types=1   )   ;',
-                self::$configurationRelocateNextLine
+                self::$configurationRelocateNextLine,
             ],
             [
                 '<?php
@@ -192,7 +192,7 @@ declare(strict_types=1);
                 '<?php
                 /**/
                 declare(strict_types=1);',
-                self::$configurationRelocateNextLine
+                self::$configurationRelocateNextLine,
             ],
             [
                 '<?php
@@ -202,7 +202,7 @@ declare(strict_types=1);
                 '<?php
 
                 phpinfo();',
-                self::$configurationRelocateNextLine
+                self::$configurationRelocateNextLine,
             ],
             [
                 '<?php
@@ -218,14 +218,14 @@ phpinfo();',
  * Foo
  */
 phpinfo();',
-                self::$configurationRelocateNextLine
+                self::$configurationRelocateNextLine,
             ],
             [
                 '<?php
 declare(strict_types=1);
 phpinfo();',
                 '<?php phpinfo();',
-                self::$configurationRelocateNextLine
+                self::$configurationRelocateNextLine,
             ],
             [
                 '<?php
@@ -235,14 +235,14 @@ $a = 456;
                 '<?php
 $a = 456;
 ',
-                self::$configurationRelocateNextLine
+                self::$configurationRelocateNextLine,
             ],
             [
                 '<?php
 declare(strict_types=1);
 /**/',
                 '<?php /**/',
-                self::$configurationRelocateNextLine
+                self::$configurationRelocateNextLine,
             ],
         ];
     }
@@ -283,24 +283,24 @@ declare/* A b C*/(strict_types=1);
 namespace A\B\C;
 class A {
 }',
-                self::$configurationRelocateSameLine
+                self::$configurationRelocateSameLine,
             ],
             [
                 '<?php declare/* A b C*/(strict_types=1);',
                 null,
-                self::$configurationRelocateSameLine
+                self::$configurationRelocateSameLine,
             ],
             [
                 '<?php deClarE(strict_types=1)
 /**/ /**/       ?>Test',
                 '<?php /**/ /**/ deClarE  (STRICT_TYPES=1)    ?>Test',
-                self::$configurationRelocateSameLine
+                self::$configurationRelocateSameLine,
             ],
             [
                 '<?php DECLARE(strict_types=1);
                        ',
                 '<?php            DECLARE  (    strict_types=1   )   ;',
-                self::$configurationRelocateSameLine
+                self::$configurationRelocateSameLine,
             ],
             [
                 '<?php declare(strict_types=1);
@@ -309,7 +309,7 @@ class A {
                 '<?php
                 /**/
                 declare(strict_types=1);',
-                self::$configurationRelocateSameLine
+                self::$configurationRelocateSameLine,
             ],
             [
                 '<?php declare(strict_types=1);
@@ -318,7 +318,7 @@ class A {
                 '<?php
 
                 phpinfo();',
-                self::$configurationRelocateSameLine
+                self::$configurationRelocateSameLine,
             ],
             [
                 '<?php declare(strict_types=1);
@@ -333,7 +333,7 @@ phpinfo();',
  * Foo
  */
 phpinfo();',
-                self::$configurationRelocateSameLine
+                self::$configurationRelocateSameLine,
             ],
             [
                 '<?php declare(strict_types=1);
@@ -353,7 +353,7 @@ phpinfo();',
                 '<?php declare(strict_types=1);
 phpinfo();',
                 '<?php phpinfo();',
-                self::$configurationRelocateSameLine
+                self::$configurationRelocateSameLine,
             ],
             [
                 '<?php declare(strict_types=1);
@@ -362,13 +362,13 @@ $a = 456;
                 '<?php
 $a = 456;
 ',
-                self::$configurationRelocateSameLine
+                self::$configurationRelocateSameLine,
             ],
             [
                 '<?php declare(strict_types=1);
 /**/',
                 '<?php /**/',
-                self::$configurationRelocateSameLine
+                self::$configurationRelocateSameLine,
             ],
             [
                 '<?php declare(strict_types=1);',
@@ -390,7 +390,7 @@ $a = 456;
         return [
             ['  <?php echo 123;'], // first statement must be a open tag
             ['<?= 123;'], // first token open with echo is not fixed
-            ['<?php declare(strict_types=1);'] // declare statement made, no preference to position configured
+            ['<?php declare(strict_types=1);'], // declare statement made, no preference to position configured
         ];
     }
 
