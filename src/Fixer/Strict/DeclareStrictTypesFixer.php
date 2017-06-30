@@ -103,18 +103,35 @@ final class DeclareStrictTypesFixer extends AbstractFixer implements Configurati
     {
         // check if the declaration is already done
         $searchIndex = $tokens->getNextMeaningfulToken(0);
-        if (null === $searchIndex) {
-            $this->insertSequence($tokens); // declaration not found, insert one
+        $sequence = $this->getDeclareStrictTypeSequence();
+        $sequenceLocation = $tokens->findSequence($sequence, $searchIndex, null, false);
 
+        if (null === $searchIndex) {
+            if ($this->configuration['add_missing']) {
+                $this->insertSequence($tokens); // declaration not found, insert one
+            }
+        } elseif (null === $sequenceLocation) {
+            if ($this->configuration['add_missing']) {
+                $this->insertSequence($tokens); // declaration not found, insert one
+            }
+        } elseif ($this->configuration['add_missing']) {
+            $this->fixStrictTypesCasing($tokens, $sequenceLocation);
+        }
+
+        // // check if the declaration is already done
+        $searchIndex = $tokens->getNextMeaningfulToken(0);
+        if (null === $searchIndex) {
             return;
         }
 
         $sequenceLocation = $tokens->findSequence([[T_DECLARE, 'declare'], '(', [T_STRING, 'strict_types'], '=', [T_LNUMBER], ')'], $searchIndex, null, false);
         if (null === $sequenceLocation) {
-            $this->insertSequence($tokens); // declaration not found, insert one
-
-            return;
+            $sequenceLocation = $tokens->findSequence($sequence, $searchIndex, null, false);
         }
+        if (null !== $sequenceLocation && false !== $this->configuration['relocate_to']) {
+            $this->fixLocation($tokens, $sequenceLocation);
+        }
+    }
 
         $this->fixStrictTypesCasingAndValue($tokens, $sequenceLocation);
     }
@@ -165,14 +182,42 @@ final class DeclareStrictTypesFixer extends AbstractFixer implements Configurati
             return; // no more tokens afters sequence, single_blank_line_at_eof might add a line
         }
 
-        $lineEnding = $this->whitespacesConfig->getLineEnding();
-        if (!$tokens[1 + $endIndex]->isWhitespace()) {
-            $tokens->insertAt(1 + $endIndex, new Token([T_WHITESPACE, $lineEnding]));
+        $nextToken = $tokens[$endIndex + 1];
+        $nextLine  = $nextToken->getContent();
+        $trailingContent = ltrim($nextLine);
+        $extraWhitespace = substr($nextLine, 0, strlen($nextLine) - strlen($trailingContent));
 
-            return;
+        $tokens->ensureWhitespaceAtIndex($endIndex + 1 , 0, $lineEnding.$extraWhitespace);
+    }
+
+    /**
+     * @param Tokens            $tokens
+     * @param array<int, Token> $sequence
+     */
+    private function fixLocation(Tokens $tokens, array $sequence)
+    {
+        reset($sequence);
+        $start = key($sequence);
+        end($sequence);
+        $end = key($sequence);
+
+        $lineEnding = $this->whitespacesConfig->getLineEnding();
+
+        if (1 !== $start) {
+            $seq = [];
+            for ($i = $start; $i <= $end; $i++) {
+                $seq[$i] = clone($tokens[$i]);
+                $tokens->clearTokenAndMergeSurroundingWhitespace($i);
+            }
+
+            $sequence = $seq;
+
+            $tokens->clearEmptyTokens();
+
+            $this->insertSequence($tokens, array_values(array_filter($sequence, function ($token){return !$token->isEmpty();})));
         }
 
-        $content = $tokens[1 + $endIndex]->getContent();
-        $tokens[1 + $endIndex] = new Token([T_WHITESPACE, $lineEnding.ltrim($content, " \t")]);
+        $end = self::LINE_NEXT === $this->configuration['relocate_to'] ? $lineEnding : ' ';
+        $tokens[0]->setContent(rtrim($tokens[0]->getContent()).$end);
     }
 }
