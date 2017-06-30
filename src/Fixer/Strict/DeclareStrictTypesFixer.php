@@ -159,16 +159,16 @@ final class DeclareStrictTypesFixer extends AbstractFixer implements Configurati
 
     private function insertSequence(Tokens $tokens): void
     {
-        $sequence = [
-            new Token([T_DECLARE, 'declare']),
-            new Token('('),
-            new Token([T_STRING, 'strict_types']),
-            new Token('='),
-            new Token([T_LNUMBER, '1']),
-            new Token(')'),
-            new Token(';'),
-        ];
-        $endIndex = \count($sequence);
+        // ensure there is a newline after php open tag
+        $lineEnding = $this->whitespacesConfig->getLineEnding();
+        $tokens[0] = new Token([$tokens[0]->getId(), rtrim($tokens[0]->getContent()).$lineEnding]);
+
+        if (null === $sequence) {
+            $sequence = $this->getDeclareStrictTypeSequence();
+            $sequence[] = new Token(';');
+        }
+
+        $endIndex = count($sequence);
 
         $tokens->insertAt(1, $sequence);
 
@@ -214,10 +214,10 @@ final class DeclareStrictTypesFixer extends AbstractFixer implements Configurati
 
             $tokens->clearEmptyTokens();
 
-            $this->insertSequence($tokens, array_values(array_filter($sequence, function ($token) {return !$token->isEmpty(); })));
+            $this->insertSequence($tokens, array_values(array_filter($sequence, function ($token) {return $token->getContent() !== ''; })));
         }
 
         $end = self::LINE_NEXT === $this->configuration['relocate_to'] ? $lineEnding : ' ';
-        $tokens[0]->setContent(rtrim($tokens[0]->getContent()).$end);
+        $tokens[0] = new Token([$tokens[0]->getId(), rtrim($tokens[0]->getContent()).$end]);
     }
 }
