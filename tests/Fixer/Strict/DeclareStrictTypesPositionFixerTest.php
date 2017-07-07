@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of PHP CS Fixer.
  *
@@ -14,7 +12,7 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\Tests\Fixer\Strict;
 
-use PhpCsFixer\Tests\Test\AbstractFixerTestCase;
+use PhpCsFixer\Test\AbstractFixerTestCase;
 use PhpCsFixer\WhitespacesFixerConfig;
 
 /**
@@ -22,107 +20,12 @@ use PhpCsFixer\WhitespacesFixerConfig;
  *
  * @internal
  *
- * @covers \PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer
+ * @covers \PhpCsFixer\Fixer\Strict\DeclareStrictTypesPositionFixerTest
  */
-final class DeclareStrictTypesFixerTest extends AbstractFixerTestCase
+final class DeclareStrictTypesPositionFixerTest extends AbstractFixerTestCase
 {
-    private static $configurationAddMissing = ['add_missing' => true];
     private static $configurationRelocateNextLine = ['relocate_to' => 'next'];
     private static $configurationRelocateSameLine = ['relocate_to' => 'same'];
-
-    /**
-     * @param string      $expected
-     * @param null|string $input
-     * @param null|array  $configuration
-     *
-     * @dataProvider provideFixCases
-     * @requires PHP 7.0
-     */
-    public function testDefaultFix($expected, $input = null, array $configuration = null)
-    {
-        if (null !== $configuration) {
-            $this->fixer->configure($configuration);
-        }
-
-        $this->doTest($expected, $input);
-    }
-
-    public function provideDefaultFixCases()
-    {
-        return [
-            [
-                '<?php
-declare(ticks=1);
-//
-declare(strict_types=1);
-
-namespace A\B\C;
-class A {
-}',
-            ],
-            [
-                '<?php
-declare/* A b C*/(strict_types=1);',
-            ],
-            [
-                '<?php /**/ /**/ deClarE  (strict_types=1)    ?>Test',
-                '<?php /**/ /**/ deClarE  (STRICT_TYPES=1)    ?>Test',
-            ],
-            [
-                '<?php            DECLARE  (    strict_types=1   )   ;',
-            ],
-            [
-                '<?php
-                /**/
-                declare(strict_types=1);',
-            ],
-            [
-                '<?php
-declare(strict_types=1);
-
-                phpinfo();',
-                '<?php
-
-                phpinfo();',
-            ],
-            [
-                '<?php
-declare(strict_types=1);
-
-/**
- * Foo
- */
-phpinfo();',
-                '<?php
-
-/**
- * Foo
- */
-phpinfo();',
-            ],
-            [
-                '<?php
-declare(strict_types=1);
-phpinfo();',
-                '<?php phpinfo();',
-            ],
-            [
-                '<?php
-declare(strict_types=1);
-$a = 456;
-',
-                '<?php
-$a = 456;
-',
-            ],
-            [
-                '<?php
-declare(strict_types=1);
-/**/',
-                '<?php /**/',
-            ],
-        ];
-    }
 
     /**
      * @param string      $expected
@@ -154,8 +57,7 @@ declare(ticks=1);
 namespace A\B\C;
 class A {
 }',
-                '<?php
-declare(ticks=1);
+                '<?php declare(ticks=1);
 //
 declare/* A b C*/(strict_types=1);
 
@@ -172,7 +74,7 @@ declare/* A b C*/(strict_types=1);',
             ],
             [
                 '<?php
-deClarE(strict_types=1)
+deClarE(STRICT_TYPES=1)
 /**/ /**/       ?>Test',
                 '<?php /**/ /**/ deClarE  (STRICT_TYPES=1)    ?>Test',
                 self::$configurationRelocateNextLine,
@@ -199,7 +101,7 @@ declare(strict_types=1);
 declare(strict_types=1);
 
                 phpinfo();',
-                '<?php
+                '<?php declare(strict_types=1);
 
                 phpinfo();',
                 self::$configurationRelocateNextLine,
@@ -212,7 +114,7 @@ declare(strict_types=1);
  * Foo
  */
 phpinfo();',
-                '<?php
+                '<?php declare(strict_types=1);
 
 /**
  * Foo
@@ -224,7 +126,7 @@ phpinfo();',
                 '<?php
 declare(strict_types=1);
 phpinfo();',
-                '<?php phpinfo();',
+                '<?php phpinfo();declare(strict_types=1);',
                 self::$configurationRelocateNextLine,
             ],
             [
@@ -232,7 +134,7 @@ phpinfo();',
 declare(strict_types=1);
 $a = 456;
 ',
-                '<?php
+                '<?php declare(strict_types=1);
 $a = 456;
 ',
                 self::$configurationRelocateNextLine,
@@ -240,8 +142,8 @@ $a = 456;
             [
                 '<?php
 declare(strict_types=1);
-/**/',
-                '<?php /**/',
+/**/ ',
+                '<?php /**/ declare(strict_types=1);',
                 self::$configurationRelocateNextLine,
             ],
         ];
@@ -291,7 +193,7 @@ class A {
                 self::$configurationRelocateSameLine,
             ],
             [
-                '<?php deClarE(strict_types=1)
+                '<?php deClarE(STRICT_TYPES=1)
 /**/ /**/       ?>Test',
                 '<?php /**/ /**/ deClarE  (STRICT_TYPES=1)    ?>Test',
                 self::$configurationRelocateSameLine,
@@ -314,21 +216,22 @@ class A {
             [
                 '<?php declare(strict_types=1);
 
+
                 phpinfo();',
                 '<?php
 
+declare(strict_types=1);
                 phpinfo();',
                 self::$configurationRelocateSameLine,
             ],
             [
                 '<?php declare(strict_types=1);
-
 /**
  * Foo
  */
 phpinfo();',
                 '<?php
-
+declare(strict_types=1);
 /**
  * Foo
  */
@@ -337,22 +240,10 @@ phpinfo();',
             ],
             [
                 '<?php declare(strict_types=1);
-
-// comment after empty line',
-                '<?php
-
-// comment after empty line',
-            ],
-            [
-                '<?php declare(strict_types=1);
-// comment without empty line before',
-                '<?php
-// comment without empty line before',
-            ],
-            [
-                '<?php declare(strict_types=1);
-phpinfo();',
-                '<?php phpinfo();',
+phpinfo();
+',
+                '<?php phpinfo();
+declare(strict_types=1);',
                 self::$configurationRelocateSameLine,
             ],
             [
@@ -360,37 +251,35 @@ phpinfo();',
 $a = 456;
 ',
                 '<?php
+declare(strict_types=1);
 $a = 456;
 ',
                 self::$configurationRelocateSameLine,
             ],
             [
                 '<?php declare(strict_types=1);
-/**/',
-                '<?php /**/',
+/**/ ',
+                '<?php /**/ declare(strict_types=1);',
                 self::$configurationRelocateSameLine,
-            ],
-            [
-                '<?php declare(strict_types=1);',
-                '<?php declare(strict_types=0);',
             ],
         ];
     }
 
     /**
+     * @param string $input
+     *
      * @dataProvider provideDoNotFixCases
      */
-    public function testDoNotFix(string $input): void
+    public function testDoNotFix($input)
     {
         $this->doTest($input);
     }
 
-    public function provideDoNotFixCases(): array
+    public function provideDoNotFixCases()
     {
         return [
             ['  <?php echo 123;'], // first statement must be a open tag
             ['<?= 123;'], // first token open with echo is not fixed
-            ['<?php declare(strict_types=1);'], // declare statement made, no preference to position configured
         ];
     }
 
@@ -401,23 +290,23 @@ $a = 456;
      * @dataProvider provideMessyWhitespacesCases
      * @requires PHP 7.0
      */
-    public function testMessyWhitespaces(string $expected, ?string $input = null): void
+    public function testMessyWhitespaces($expected, $input = null)
     {
         $this->fixer->setWhitespacesConfig(new WhitespacesFixerConfig("\t", "\r\n"));
 
         $this->doTest($expected, $input);
     }
 
-    public function provideMessyWhitespacesCases(): array
+    public function provideMessyWhitespacesCases()
     {
         return [
             [
                 "<?php\r\ndeclare(strict_types=1);\r\n\tphpinfo();",
-                "<?php\r\n\tphpinfo();",
+                "<?php\r\n\tphpinfo();declare(strict_types=1);",
             ],
             [
                 "<?php\r\ndeclare(strict_types=1);\r\nphpinfo();",
-                "<?php\nphpinfo();",
+                "<?php\nphpinfo();declare(strict_types=1);",
             ],
         ];
     }
