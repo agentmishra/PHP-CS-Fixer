@@ -954,6 +954,300 @@ final class ConfigurationResolverTest extends TestCase
         );
     }
 
+    /**
+     * Test the renamed rule blank_line_before_return
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesBlankLineBeforeReturnWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "blank_line_before_return" is a renamed rule,  did you mean "blank_line_before_statement"? note: use configuration [\'statements\' => [\'return\']]
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'blank_line_before_return']);
+
+        $resolver->getRules();
+    }
+    
+    /**
+     * Test the renamed rule final_static_access
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesFinalStaticAccessWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "final_static_access" is a renamed rule,  did you mean "self_static_accessor"?
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'final_static_access']);
+
+        $resolver->getRules();
+    }
+    
+    /**
+     * Test the renamed rule hash_to_slash_comment
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesHashToSlashCommentWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "hash_to_slash_comment" is a renamed rule,  did you mean "single_line_comment_style"? note: use configuration [\'comment_types\' => [\'hash\']]
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'hash_to_slash_comment']);
+
+        $resolver->getRules();
+    }
+    
+    /**
+     * Test the renamed rule lowercase_constants
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesLowercaseConstantsCommentWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "lowercase_constants" is a renamed rule,  did you mean "constant_case"? note: use configuration [\'case\' => \'lower\']
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'lowercase_constants']);
+
+        $resolver->getRules();
+    }
+
+    /**
+     * Test the renamed rule no_extra_consecutive_blank_lines
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesNoExtraConsecutiveBlankLinesCommentWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "no_extra_consecutive_blank_lines" is a renamed rule,  did you mean "no_extra_blank_lines"?
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'no_extra_consecutive_blank_lines']);
+
+        $resolver->getRules();
+    }
+
+    /**
+     * Test the renamed rule no_multiline_whitespace_before_semicolons
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesNoMultilineWhitespaceBeforeSemicolonsWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "no_multiline_whitespace_before_semicolons" is a renamed rule,  did you mean "multiline_whitespace_before_semicolons"?
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'no_multiline_whitespace_before_semicolons']);
+
+        $resolver->getRules();
+    }
+
+    /**
+     * Test the renamed rule no_short_echo_tag
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesNoShortEchoTagWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "no_short_echo_tag" is a renamed rule,  did you mean "echo_tag_syntax"? note: use configuration [\'format\' => \'long\']
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'no_short_echo_tag']);
+
+        $resolver->getRules();
+    }
+
+    /**
+     * Test the renamed rule php_unit_ordered_covers
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesPHPUnitOrderedCoversWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "php_unit_ordered_covers" is a renamed rule,  did you mean "phpdoc_order_by_value"? note: use configuration [\'annotations\' => [ \'covers\' ]]
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'php_unit_ordered_covers']);
+
+        $resolver->getRules();
+    }
+
+    /**
+     * Test the renamed rule phpdoc_inline_tag
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesPhpdocInlineTagWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "phpdoc_inline_tag" is a renamed rule,  did you mean "general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type"?
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'phpdoc_inline_tag']);
+
+        $resolver->getRules();
+    }
+
+    /**
+     * Test the renamed rule pre_increment
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesPreIncrementWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "pre_increment" is a renamed rule,  did you mean "increment_style"? note: use configuration [\'style\' => \'pre\']
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'pre_increment']);
+
+        $resolver->getRules();
+    }
+
+    /**
+     * Test the renamed rule psr0
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesPSR0WithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "psr0" is a renamed rule,  did you mean "psr_autoloading"? note: use configuration [\'dir\' => x ]
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'psr0']);
+
+        $resolver->getRules();
+    }
+
+    /**
+     * Test the renamed rule psr4
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesPSR4WithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "psr4" is a renamed rule,  did you mean "psr_autoloading"?
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'psr4']);
+
+        $resolver->getRules();
+    }
+
+    /**
+     * Test the renamed rule silenced_deprecation_error
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesSilencedDeprecationErrorWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "silenced_deprecation_error" is a renamed rule,  did you mean "error_suppression"?
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'silenced_deprecation_error']);
+
+        $resolver->getRules();
+    }
+
+    /**
+     * Test the renamed rule silenced_deprecation_error
+     * 
+     * @return void
+     */
+    public function testResolveRenamedRulesTrailingCommaInMultilineArrayWithUnknownRules(): void
+    {
+        $this->expectException(
+            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
+        );
+        $this->expectExceptionMessage(
+            'The rules contain unknown fixers: "trailing_comma_in_multiline_array" is a renamed rule,  did you mean "trailing_comma_in_multiline"? note: use configuration [\'elements\' => [\'arrays\']]
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules.'
+        );
+
+        $resolver = $this->createConfigurationResolver(['rules' => 'trailing_comma_in_multiline_array']);
+
+        $resolver->getRules();
+    }
+    
     public function testResolveRulesWithUnknownRules(): void
     {
         $this->expectException(
