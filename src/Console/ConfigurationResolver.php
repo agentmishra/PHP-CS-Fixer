@@ -704,73 +704,72 @@ final class ConfigurationResolver
         if (\count($unknownFixers)) {
             
             $renamedRules = [
-            	[
-            		'old_name' => 'blank_line_before_return', 
+            	'blank_line_before_return' => [
             		'new_name' => 'blank_line_before_statement',
             		'note' => 'use configuration [\'statements\' => [\'return\']]' 
             	],
+                'final_static_access' =>
             	[
-            		'old_name' => 'final_static_access', 
             		'new_name' => 'self_static_accessor',
             		'note' => '' 
             	],
+                'hash_to_slash_comment' =>
             	[
-            		'old_name' => 'hash_to_slash_comment', 
             		'new_name' => 'single_line_comment_style',
             		'note' => 'use configuration [\'comment_types\' => [\'hash\']]'    
             	],
+                'lowercase_constants' =>
             	[
-            		'old_name' => 'lowercase_constants', 
             		'new_name' => 'constant_case',
             		'note' => 'use configuration [\'case\' => \'lower\']'
             	],
+                'no_extra_consecutive_blank_lines' =>
             	[
-            		'old_name' => 'no_extra_consecutive_blank_lines', 
             		'new_name' => 'no_extra_blank_lines',
             		'note' => ''
             	],
+                'no_multiline_whitespace_before_semicolons' =>
             	[
-            		'old_name' => 'no_multiline_whitespace_before_semicolons', 
             		'new_name' => 'multiline_whitespace_before_semicolons',
             		'note' => ''
             	],
+                'no_short_echo_tag' =>
             	[
-            		'old_name' => 'no_short_echo_tag', 
             		'new_name' => 'echo_tag_syntax',
             		'note' => 'use configuration [\'format\' => \'long\']'    
             	],
+                'php_unit_ordered_covers' =>
             	[
-            		'old_name' => 'php_unit_ordered_covers', 
             		'new_name' => 'phpdoc_order_by_value',
             		'note' => 'use configuration [\'annotations\' => [ \'covers\' ]]'    
             	],
+                'phpdoc_inline_tag' =>
             	[
-            		'old_name' => 'phpdoc_inline_tag', 
             		'new_name' => 'general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type',
             		'note' => ''    
             	],
+                'pre_increment' =>
             	[
-            		'old_name' => 'pre_increment', 
             		'new_name' => 'increment_style',
             		'note' => 'use configuration [\'style\' => \'pre\']'    
             	],
+                'psr0' =>
             	[
-            		'old_name' => 'psr0', 
             		'new_name' => 'psr_autoloading',
             		'note' => 'use configuration [\'dir\' => x ]'    
             	],
+                'psr4' =>
             	[
-            		'old_name' => 'psr4', 
             		'new_name' => 'psr_autoloading',
             		'note' => ''    
             	],
+                'silenced_deprecation_error' =>
             	[
-            		'old_name' => 'silenced_deprecation_error', 
             		'new_name' => 'error_suppression',
             		'note' => ''    
             	],
+                'trailing_comma_in_multiline_array',
             	[
-            		'old_name' => 'trailing_comma_in_multiline_array', 
             		'new_name' => 'trailing_comma_in_multiline',
             		'note' => 'use configuration [\'elements\' => [\'arrays\']]'    
             	]
@@ -783,18 +782,15 @@ final class ConfigurationResolver
 
                 $isRenamed = false;
                 // Check if present as old renamed rule
-                foreach ($renamedRules as $renamedRule) {
-                    if($renamedRule['old_name'] == $unknownFixer) {
-                         $message .= sprintf(
-                            '"%s" is a renamed rule, %s, ',
-                            $unknownFixer,
-                            ' did you mean "'.$renamedRule['new_name'].'"?' . (!empty($renamedRule['note']) ? ' note: ' . $renamedRule['note'] : '' ) . PHP_EOL . PHP_EOL .
-                            'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules'
-                        );
+                if(isset($renamedRules[$unknownFixer])) {
+                     $message .= sprintf(
+                        '"%s" is a renamed rule, %s, ',
+                        $unknownFixer,
+                        ' did you mean "'.$renamedRules[$unknownFixer]['new_name'].'"?' . (!empty($renamedRules[$unknownFixer]['note']) ? ' note: ' . $renamedRules[$unknownFixer]['note'] : '' ) . PHP_EOL . PHP_EOL .
+                        'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules'
+                    );
                          
-                        $isRenamed = true;
-                        break;
-                    }
+                    $isRenamed = true;
                 }
 
                 // Go to normal matcher if it is not a renamed rule
