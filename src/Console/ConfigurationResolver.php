@@ -702,16 +702,110 @@ final class ConfigurationResolver
         );
 
         if (\count($unknownFixers)) {
+            
+            $renamedRules = [
+            	[
+            		'old_name' => 'blank_line_before_return', 
+            		'new_name' => 'blank_line_before_statement',
+            		'note' => 'use configuration [\'statements\' => [\'return\']]' 
+            	],
+            	[
+            		'old_name' => 'final_static_access', 
+            		'new_name' => 'self_static_accessor',
+            		'note' => '' 
+            	],
+            	[
+            		'old_name' => 'hash_to_slash_comment', 
+            		'new_name' => 'single_line_comment_style',
+            		'note' => 'use configuration [\'comment_types\' => [\'hash\']]'    
+            	],
+            	[
+            		'old_name' => 'lowercase_constants', 
+            		'new_name' => 'constant_case',
+            		'note' => 'use configuration [\'case\' => \'lower\']'
+            	],
+            	[
+            		'old_name' => 'no_extra_consecutive_blank_lines', 
+            		'new_name' => 'no_extra_blank_lines',
+            		'note' => ''
+            	],
+            	[
+            		'old_name' => 'no_multiline_whitespace_before_semicolons', 
+            		'new_name' => 'multiline_whitespace_before_semicolons',
+            		'note' => ''
+            	],
+            	[
+            		'old_name' => 'no_short_echo_tag', 
+            		'new_name' => 'echo_tag_syntax',
+            		'note' => 'use configuration [\'format\' => \'long\']'    
+            	],
+            	[
+            		'old_name' => 'php_unit_ordered_covers', 
+            		'new_name' => 'phpdoc_order_by_value',
+            		'note' => 'use configuration [\'annotations\' => [ \'covers\' ]]'    
+            	],
+            	[
+            		'old_name' => 'phpdoc_inline_tag', 
+            		'new_name' => 'general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type',
+            		'note' => ''    
+            	],
+            	[
+            		'old_name' => 'pre_increment', 
+            		'new_name' => 'increment_style',
+            		'note' => 'use configuration [\'style\' => \'pre\']'    
+            	],
+            	[
+            		'old_name' => 'psr0', 
+            		'new_name' => 'psr_autoloading',
+            		'note' => 'use configuration [\'dir\' => x ]'    
+            	],
+            	[
+            		'old_name' => 'psr4', 
+            		'new_name' => 'psr_autoloading',
+            		'note' => ''    
+            	],
+            	[
+            		'old_name' => 'silenced_deprecation_error', 
+            		'new_name' => 'error_suppression',
+            		'note' => ''    
+            	],
+            	[
+            		'old_name' => 'trailing_comma_in_multiline_array', 
+            		'new_name' => 'trailing_comma_in_multiline',
+            		'note' => 'use configuration [\'elements\' => [\'arrays\']]'    
+            	]
+            ];
+            
             $matcher = new WordMatcher($availableFixers);
 
             $message = 'The rules contain unknown fixers: ';
             foreach ($unknownFixers as $unknownFixer) {
-                $alternative = $matcher->match($unknownFixer);
-                $message .= sprintf(
-                    '"%s"%s, ',
-                    $unknownFixer,
-                    null === $alternative ? '' : ' (did you mean "'.$alternative.'"?)'
-                );
+
+                $isRenamed = false;
+                // Check if present as old renamed rule
+                foreach ($renamedRules as $renamedRule) {
+                    if($renamedRule['old_name'] == $unknownFixer) {
+                         $message .= sprintf(
+                            '"%s" is a renamed rule, %s, ',
+                            $unknownFixer,
+                            ' did you mean "'.$renamedRule['new_name'].'"?' . (!empty($renamedRule['note']) ? ' note: ' . $renamedRule['note'] : '' ) . PHP_EOL . PHP_EOL .
+                            'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules'
+                        );
+                         
+                        $isRenamed = true;
+                        break;
+                    }
+                }
+
+                // Go to normal matcher if it is not a renamed rule
+                if (!$isRenamed) {
+                    $alternative = $matcher->match($unknownFixer);
+                    $message .= sprintf(
+                        '"%s"%s, ',
+                        $unknownFixer,
+                        null === $alternative ? '' : ' (did you mean "'.$alternative.'"?)'
+                    );
+                }
             }
 
             throw new InvalidConfigurationException(substr($message, 0, -2).'.');
