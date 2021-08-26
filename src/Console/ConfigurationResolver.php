@@ -23,6 +23,7 @@ use PhpCsFixer\Cache\NullCacheManager;
 use PhpCsFixer\Cache\Signature;
 use PhpCsFixer\ConfigInterface;
 use PhpCsFixer\ConfigurationException\InvalidConfigurationException;
+use PhpCsFixer\Console\Command\HelpCommand;
 use PhpCsFixer\Console\Report\FixReport\ReporterFactory;
 use PhpCsFixer\Console\Report\FixReport\ReporterInterface;
 use PhpCsFixer\Differ\DifferInterface;
@@ -706,57 +707,57 @@ final class ConfigurationResolver
             $renamedRules = [
             	'blank_line_before_return' => [
             		'new_name' => 'blank_line_before_statement',
-            		'note' => 'use configuration [\'statements\' => [\'return\']]' 
+            		'note' => ['statements' => ['return']]
             	],
                 'final_static_access' =>
             	[
             		'new_name' => 'self_static_accessor',
-            		'note' => '' 
+            		'note' => []
             	],
                 'hash_to_slash_comment' =>
             	[
             		'new_name' => 'single_line_comment_style',
-            		'note' => 'use configuration [\'comment_types\' => [\'hash\']]'    
+            		'note' => ['comment_types' => ['hash']]    
             	],
                 'lowercase_constants' =>
             	[
             		'new_name' => 'constant_case',
-            		'note' => 'use configuration [\'case\' => \'lower\']'
+            		'note' => ['case' => 'lower']
             	],
                 'no_extra_consecutive_blank_lines' =>
             	[
             		'new_name' => 'no_extra_blank_lines',
-            		'note' => ''
+            		'note' => []
             	],
                 'no_multiline_whitespace_before_semicolons' =>
             	[
             		'new_name' => 'multiline_whitespace_before_semicolons',
-            		'note' => ''
+            		'note' => []
             	],
                 'no_short_echo_tag' =>
             	[
             		'new_name' => 'echo_tag_syntax',
-            		'note' => 'use configuration [\'format\' => \'long\']'    
+            		'note' => ['format' => 'long']    
             	],
                 'php_unit_ordered_covers' =>
             	[
             		'new_name' => 'phpdoc_order_by_value',
-            		'note' => 'use configuration [\'annotations\' => [ \'covers\' ]]'    
+            		'note' => ['annotations' => ['covers']] 
             	],
                 'phpdoc_inline_tag' =>
             	[
             		'new_name' => 'general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type',
-            		'note' => ''    
+            		'note' => []    
             	],
                 'pre_increment' =>
             	[
             		'new_name' => 'increment_style',
-            		'note' => 'use configuration [\'style\' => \'pre\']'    
+            		'note' => ['style' => 'pre']    
             	],
                 'psr0' =>
             	[
             		'new_name' => 'psr_autoloading',
-            		'note' => 'use configuration [\'dir\' => x ]'    
+            		'note' => ['dir' => 'x'],    
             	],
                 'psr4' =>
             	[
@@ -771,7 +772,7 @@ final class ConfigurationResolver
                 'trailing_comma_in_multiline_array',
             	[
             		'new_name' => 'trailing_comma_in_multiline',
-            		'note' => 'use configuration [\'elements\' => [\'arrays\']]'    
+            		'note' => ['elements' => ['arrays']],  
             	]
             ];
             
@@ -786,7 +787,7 @@ final class ConfigurationResolver
                      $message .= sprintf(
                         '"%s" is a renamed rule, %s, ',
                         $unknownFixer,
-                        ' did you mean "'.$renamedRules[$unknownFixer]['new_name'].'"?' . (!empty($renamedRules[$unknownFixer]['note']) ? ' note: ' . $renamedRules[$unknownFixer]['note'] : '' ) . PHP_EOL . PHP_EOL .
+                        ' did you mean "'.$renamedRules[$unknownFixer]['new_name'].'"?' . (!empty($renamedRules[$unknownFixer]['note']) ? ' note: use configuration ' . HelpCommand::toString($renamedRules[$unknownFixer]['note']) : '' ) . PHP_EOL . PHP_EOL .
                         'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules'
                     );
                          
