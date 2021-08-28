@@ -788,7 +788,7 @@ final class ConfigurationResolver
                         '"%s" is a renamed rule, %s, ',
                         $unknownFixer,
                         ' did you mean "'.$renamedRules[$unknownFixer]['new_name'].'"?' . (!empty($renamedRules[$unknownFixer]['note']) ? ' note: use configuration ' . HelpCommand::toString($renamedRules[$unknownFixer]['note']) : '' ) . PHP_EOL . PHP_EOL .
-                        'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/3.0/UPGRADE-v3.md#renamed-rules'
+                        'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules'
                     );
                          
                     $isRenamed = true;
