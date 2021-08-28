@@ -961,7 +961,7 @@ final class ConfigurationResolverTest extends TestCase
      * 
      * @return void
      */
-    public function testResolveRenamedRulesWithUnknownRules(string $expectedMessage, $renamedRule): void
+    public function testResolveRenamedRulesWithUnknownRules(string $expectedMessage, string $renamedRule): void
     {
         $this->expectException(
             \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
