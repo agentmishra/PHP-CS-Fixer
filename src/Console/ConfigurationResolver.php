@@ -717,7 +717,7 @@ final class ConfigurationResolver
                 'hash_to_slash_comment' =>
             	[
             		'new_name' => 'single_line_comment_style',
-            		'config' => ['comment_types' => ['hash']]    
+            		'config' => ['comment_types' => ['hash']]
             	],
                 'lowercase_constants' =>
             	[
@@ -742,7 +742,7 @@ final class ConfigurationResolver
                 'php_unit_ordered_covers' =>
             	[
             		'new_name' => 'phpdoc_order_by_value',
-            		'config' => ['annotations' => ['covers']] 
+            		'config' => ['annotations' => ['covers']]
             	],
                 'phpdoc_inline_tag' =>
             	[
@@ -772,7 +772,7 @@ final class ConfigurationResolver
                 'trailing_comma_in_multiline_array' =>
             	[
             		'new_name' => 'trailing_comma_in_multiline',
-            		'config' => ['elements' => ['arrays']] 
+            		'config' => ['elements' => ['arrays']]
             	]
             ];
             
