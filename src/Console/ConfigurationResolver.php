@@ -707,72 +707,72 @@ final class ConfigurationResolver
             $renamedRules = [
             	'blank_line_before_return' => [
             		'new_name' => 'blank_line_before_statement',
-            		'note' => ['statements' => ['return']]
+            		'config' => ['statements' => ['return']]
             	],
                 'final_static_access' =>
             	[
             		'new_name' => 'self_static_accessor',
-            		'note' => null
+            		'config' => null
             	],
                 'hash_to_slash_comment' =>
             	[
             		'new_name' => 'single_line_comment_style',
-            		'note' => ['comment_types' => ['hash']]    
+            		'config' => ['comment_types' => ['hash']]    
             	],
                 'lowercase_constants' =>
             	[
             		'new_name' => 'constant_case',
-            		'note' => ['case' => 'lower']
+            		'config' => ['case' => 'lower']
             	],
                 'no_extra_consecutive_blank_lines' =>
             	[
             		'new_name' => 'no_extra_blank_lines',
-            		'note' => null
+            		'config' => null
             	],
                 'no_multiline_whitespace_before_semicolons' =>
             	[
             		'new_name' => 'multiline_whitespace_before_semicolons',
-            		'note' => null
+            		'config' => null
             	],
                 'no_short_echo_tag' =>
             	[
             		'new_name' => 'echo_tag_syntax',
-            		'note' => ['format' => 'long']    
+            		'config' => ['format' => 'long']    
             	],
                 'php_unit_ordered_covers' =>
             	[
             		'new_name' => 'phpdoc_order_by_value',
-            		'note' => ['annotations' => ['covers']] 
+            		'config' => ['annotations' => ['covers']] 
             	],
                 'phpdoc_inline_tag' =>
             	[
             		'new_name' => 'general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type',
-            		'note' => null    
+            		'config' => null    
             	],
                 'pre_increment' =>
             	[
             		'new_name' => 'increment_style',
-            		'note' => ['style' => 'pre']    
+            		'config' => ['style' => 'pre']    
             	],
                 'psr0' =>
             	[
             		'new_name' => 'psr_autoloading',
-            		'note' => ['dir' => 'x'],    
+            		'config' => ['dir' => 'x'],    
             	],
                 'psr4' =>
             	[
             		'new_name' => 'psr_autoloading',
-            		'note' => null    
+            		'config' => null    
             	],
                 'silenced_deprecation_error' =>
             	[
             		'new_name' => 'error_suppression',
-            		'note' => null    
+            		'config' => null    
             	],
                 'trailing_comma_in_multiline_array',
             	[
             		'new_name' => 'trailing_comma_in_multiline',
-            		'note' => ['elements' => ['arrays']],  
+            		'config' => ['elements' => ['arrays']],  
             	]
             ];
             
@@ -786,7 +786,7 @@ final class ConfigurationResolver
                      $message .= sprintf(
                         '"%s" is a renamed rule, %s, ',
                         $unknownFixer,
-                        ' did you mean "'.$renamedRules[$unknownFixer]['new_name'].'"?' . (!empty($renamedRules[$unknownFixer]['note']) ? ' note: use configuration ' . HelpCommand::toString($renamedRules[$unknownFixer]['note']) : '' ) . PHP_EOL . PHP_EOL .
+                        ' did you mean "'.$renamedRules[$unknownFixer]['new_name'].'"?' . (!empty($renamedRules[$unknownFixer]['config']) ? ' note: use configuration ' . HelpCommand::toString($renamedRules[$unknownFixer]['note']) : '' ) . PHP_EOL . PHP_EOL .
                         'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules'
                     );
                 }
