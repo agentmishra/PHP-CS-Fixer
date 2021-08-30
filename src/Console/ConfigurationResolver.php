@@ -766,7 +766,6 @@ final class ConfigurationResolver
 
             $message = 'The rules contain unknown fixers: ';
             foreach ($unknownFixers as $unknownFixer) {
-
                 // Check if present as old renamed rule
                 if (isset($renamedRules[$unknownFixer])) {
                     $message .= sprintf(
@@ -905,6 +904,8 @@ final class ConfigurationResolver
 
     /**
      * Set option that will be resolved.
+     *
+     * @param mixed $value
      */
     private function setOption(string $name, $value): void
     {
