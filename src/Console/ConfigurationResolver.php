@@ -712,7 +712,7 @@ final class ConfigurationResolver
                 'final_static_access' =>
             	[
             		'new_name' => 'self_static_accessor',
-            		'note' => []
+            		'note' => null
             	],
                 'hash_to_slash_comment' =>
             	[
@@ -727,12 +727,12 @@ final class ConfigurationResolver
                 'no_extra_consecutive_blank_lines' =>
             	[
             		'new_name' => 'no_extra_blank_lines',
-            		'note' => []
+            		'note' => null
             	],
                 'no_multiline_whitespace_before_semicolons' =>
             	[
             		'new_name' => 'multiline_whitespace_before_semicolons',
-            		'note' => []
+            		'note' => null
             	],
                 'no_short_echo_tag' =>
             	[
@@ -747,7 +747,7 @@ final class ConfigurationResolver
                 'phpdoc_inline_tag' =>
             	[
             		'new_name' => 'general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type',
-            		'note' => []    
+            		'note' => null    
             	],
                 'pre_increment' =>
             	[
@@ -762,12 +762,12 @@ final class ConfigurationResolver
                 'psr4' =>
             	[
             		'new_name' => 'psr_autoloading',
-            		'note' => ''    
+            		'note' => null    
             	],
                 'silenced_deprecation_error' =>
             	[
             		'new_name' => 'error_suppression',
-            		'note' => ''    
+            		'note' => null    
             	],
                 'trailing_comma_in_multiline_array',
             	[
