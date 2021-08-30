@@ -781,7 +781,6 @@ final class ConfigurationResolver
             $message = 'The rules contain unknown fixers: ';
             foreach ($unknownFixers as $unknownFixer) {
 
-                $isRenamed = false;
                 // Check if present as old renamed rule
                 if(isset($renamedRules[$unknownFixer])) {
                      $message .= sprintf(
@@ -790,12 +789,8 @@ final class ConfigurationResolver
                         ' did you mean "'.$renamedRules[$unknownFixer]['new_name'].'"?' . (!empty($renamedRules[$unknownFixer]['note']) ? ' note: use configuration ' . HelpCommand::toString($renamedRules[$unknownFixer]['note']) : '' ) . PHP_EOL . PHP_EOL .
                         'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules'
                     );
-                         
-                    $isRenamed = true;
                 }
-
-                // Go to normal matcher if it is not a renamed rule
-                if (!$isRenamed) {
+                else { // Go to normal matcher if it is not a renamed rule
                     $alternative = $matcher->match($unknownFixer);
                     $message .= sprintf(
                         '"%s"%s, ',
