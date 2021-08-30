@@ -956,9 +956,9 @@ final class ConfigurationResolverTest extends TestCase
 
     /**
      * Test the renamed rules
-     * 
+     *
      * @dataProvider provideRenamedRulesCases
-     * 
+     *
      * @return void
      */
     public function testResolveRenamedRulesWithUnknownRules(string $expectedMessage, string $renamedRule): void
@@ -972,7 +972,7 @@ final class ConfigurationResolverTest extends TestCase
 
         $resolver->getRules();
     }
-    
+
     public function provideRenamedRulesCases()
     {
         return [
@@ -1056,7 +1056,7 @@ For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGR
             ],
         ];
     }
-    
+
     public function testResolveRulesWithUnknownRules(): void
     {
         $this->expectException(

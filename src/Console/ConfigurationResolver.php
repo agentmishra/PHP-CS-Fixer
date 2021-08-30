@@ -703,7 +703,7 @@ final class ConfigurationResolver
         );
 
         if (\count($unknownFixers)) {
-            
+
             $renamedRules = [
             	'blank_line_before_return' => [
             		'new_name' => 'blank_line_before_statement',
@@ -737,7 +737,7 @@ final class ConfigurationResolver
                 'no_short_echo_tag' =>
             	[
             		'new_name' => 'echo_tag_syntax',
-            		'config' => ['format' => 'long']    
+            		'config' => ['format' => 'long']
             	],
                 'php_unit_ordered_covers' =>
             	[
@@ -747,27 +747,27 @@ final class ConfigurationResolver
                 'phpdoc_inline_tag' =>
             	[
             		'new_name' => 'general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type',
-            		'config' => null    
+            		'config' => null
             	],
                 'pre_increment' =>
             	[
             		'new_name' => 'increment_style',
-            		'config' => ['style' => 'pre']    
+            		'config' => ['style' => 'pre']
             	],
                 'psr0' =>
             	[
             		'new_name' => 'psr_autoloading',
-            		'config' => ['dir' => 'x'],    
+            		'config' => ['dir' => 'x'],
             	],
                 'psr4' =>
             	[
             		'new_name' => 'psr_autoloading',
-            		'config' => null    
+            		'config' => null
             	],
                 'silenced_deprecation_error' =>
             	[
             		'new_name' => 'error_suppression',
-            		'config' => null    
+            		'config' => null
             	],
                 'trailing_comma_in_multiline_array' =>
             	[
@@ -775,12 +775,12 @@ final class ConfigurationResolver
             		'config' => ['elements' => ['arrays']]
             	]
             ];
-            
+
             $matcher = new WordMatcher($availableFixers);
 
             $message = 'The rules contain unknown fixers: ';
             foreach ($unknownFixers as $unknownFixer) {
-                
+
                 // Check if present as old renamed rule
                 if(isset($renamedRules[$unknownFixer])) {
 
