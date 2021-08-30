@@ -703,77 +703,63 @@ final class ConfigurationResolver
         );
 
         if (\count($unknownFixers)) {
-
             $renamedRules = [
-            	'blank_line_before_return' => [
-            		'new_name' => 'blank_line_before_statement',
-            		'config' => ['statements' => ['return']]
-            	],
-                'final_static_access' =>
-            	[
-            		'new_name' => 'self_static_accessor',
-            		'config' => null
-            	],
-                'hash_to_slash_comment' =>
-            	[
-            		'new_name' => 'single_line_comment_style',
-            		'config' => ['comment_types' => ['hash']]
-            	],
-                'lowercase_constants' =>
-            	[
-            		'new_name' => 'constant_case',
-            		'config' => ['case' => 'lower']
-            	],
-                'no_extra_consecutive_blank_lines' =>
-            	[
-            		'new_name' => 'no_extra_blank_lines',
-            		'config' => null
-            	],
-                'no_multiline_whitespace_before_semicolons' =>
-            	[
-            		'new_name' => 'multiline_whitespace_before_semicolons',
-            		'config' => null
-            	],
-                'no_short_echo_tag' =>
-            	[
-            		'new_name' => 'echo_tag_syntax',
-            		'config' => ['format' => 'long']
-            	],
-                'php_unit_ordered_covers' =>
-            	[
-            		'new_name' => 'phpdoc_order_by_value',
-            		'config' => ['annotations' => ['covers']]
-            	],
-                'phpdoc_inline_tag' =>
-            	[
-            		'new_name' => 'general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type',
-            		'config' => null
-            	],
-                'pre_increment' =>
-            	[
-            		'new_name' => 'increment_style',
-            		'config' => ['style' => 'pre']
-            	],
-                'psr0' =>
-            	[
-            		'new_name' => 'psr_autoloading',
-            		'config' => ['dir' => 'x'],
-            	],
-                'psr4' =>
-            	[
-            		'new_name' => 'psr_autoloading',
-            		'config' => null
-            	],
-                'silenced_deprecation_error' =>
-            	[
-            		'new_name' => 'error_suppression',
-            		'config' => null
-            	],
-                'trailing_comma_in_multiline_array' =>
-            	[
-            		'new_name' => 'trailing_comma_in_multiline',
-            		'config' => ['elements' => ['arrays']]
-            	]
+                'blank_line_before_return' => [
+                    'new_name' => 'blank_line_before_statement',
+                    'config' => ['statements' => ['return']],
+                ],
+                'final_static_access' => [
+                    'new_name' => 'self_static_accessor',
+                    'config' => null,
+                ],
+                'hash_to_slash_comment' => [
+                    'new_name' => 'single_line_comment_style',
+                    'config' => ['comment_types' => ['hash']],
+                ],
+                'lowercase_constants' => [
+                    'new_name' => 'constant_case',
+                    'config' => ['case' => 'lower'],
+                ],
+                'no_extra_consecutive_blank_lines' => [
+                    'new_name' => 'no_extra_blank_lines',
+                    'config' => null,
+                ],
+                'no_multiline_whitespace_before_semicolons' => [
+                    'new_name' => 'multiline_whitespace_before_semicolons',
+                    'config' => null,
+                ],
+                'no_short_echo_tag' => [
+                    'new_name' => 'echo_tag_syntax',
+                    'config' => ['format' => 'long'],
+                ],
+                'php_unit_ordered_covers' => [
+                    'new_name' => 'phpdoc_order_by_value',
+                    'config' => ['annotations' => ['covers']],
+                ],
+                'phpdoc_inline_tag' => [
+                    'new_name' => 'general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type',
+                    'config' => null,
+                ],
+                'pre_increment' => [
+                    'new_name' => 'increment_style',
+                    'config' => ['style' => 'pre'],
+                ],
+                'psr0' => [
+                    'new_name' => 'psr_autoloading',
+                    'config' => ['dir' => 'x'],
+                ],
+                'psr4' => [
+                    'new_name' => 'psr_autoloading',
+                    'config' => null,
+                ],
+                'silenced_deprecation_error' => [
+                    'new_name' => 'error_suppression',
+                    'config' => null,
+                ],
+                'trailing_comma_in_multiline_array' => [
+                    'new_name' => 'trailing_comma_in_multiline',
+                    'config' => ['elements' => ['arrays']],
+                ],
             ];
 
             $matcher = new WordMatcher($availableFixers);
@@ -782,16 +768,14 @@ final class ConfigurationResolver
             foreach ($unknownFixers as $unknownFixer) {
 
                 // Check if present as old renamed rule
-                if(isset($renamedRules[$unknownFixer])) {
-
-                     $message .= sprintf(
+                if (isset($renamedRules[$unknownFixer])) {
+                    $message .= sprintf(
                         '"%s" is a renamed rule, %s, ',
                         $unknownFixer,
-                        ' did you mean "'.$renamedRules[$unknownFixer]['new_name'].'"' . (!empty($renamedRules[$unknownFixer]['config']) ? ' (note: use configuration "' . HelpCommand::toString($renamedRules[$unknownFixer]['config']) . '")' : '' ) . '?' . PHP_EOL . PHP_EOL .
+                        ' did you mean "'.$renamedRules[$unknownFixer]['new_name'].'"'.(!empty($renamedRules[$unknownFixer]['config']) ? ' (note: use configuration "'.HelpCommand::toString($renamedRules[$unknownFixer]['config']).'")' : '').'?'.PHP_EOL.PHP_EOL.
                         'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules'
                     );
-                }
-                else { // Go to normal matcher if it is not a renamed rule
+                } else { // Go to normal matcher if it is not a renamed rule
                     $alternative = $matcher->match($unknownFixer);
                     $message .= sprintf(
                         '"%s"%s, ',
@@ -921,8 +905,6 @@ final class ConfigurationResolver
 
     /**
      * Set option that will be resolved.
-     *
-     * @param mixed $value
      */
     private function setOption(string $name, $value): void
     {

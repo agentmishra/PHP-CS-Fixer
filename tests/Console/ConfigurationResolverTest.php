@@ -955,11 +955,9 @@ final class ConfigurationResolverTest extends TestCase
     }
 
     /**
-     * Test the renamed rules
+     * Test the renamed rules.
      *
      * @dataProvider provideRenamedRulesCases
-     *
-     * @return void
      */
     public function testResolveRenamedRulesWithUnknownRules(string $expectedMessage, string $renamedRule): void
     {
@@ -977,67 +975,67 @@ final class ConfigurationResolverTest extends TestCase
     {
         return [
             [
-                'The rules contain unknown fixers: "blank_line_before_return" is a renamed rule,  did you mean "blank_line_before_statement" (note: use configuration "[\'statements\' => [\'return\']]")?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "blank_line_before_return" is a renamed rule,  did you mean "blank_line_before_statement" (note: use configuration "[\'statements\' => [\'return\']]")?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'blank_line_before_return',
             ],
             [
-                'The rules contain unknown fixers: "final_static_access" is a renamed rule,  did you mean "self_static_accessor"?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "final_static_access" is a renamed rule,  did you mean "self_static_accessor"?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'final_static_access',
             ],
             [
-                'The rules contain unknown fixers: "hash_to_slash_comment" is a renamed rule,  did you mean "single_line_comment_style" (note: use configuration "[\'comment_types\' => [\'hash\']]")?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "hash_to_slash_comment" is a renamed rule,  did you mean "single_line_comment_style" (note: use configuration "[\'comment_types\' => [\'hash\']]")?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'hash_to_slash_comment',
             ],
             [
-                'The rules contain unknown fixers: "lowercase_constants" is a renamed rule,  did you mean "constant_case" (note: use configuration "[\'case\' => \'lower\']")?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "lowercase_constants" is a renamed rule,  did you mean "constant_case" (note: use configuration "[\'case\' => \'lower\']")?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'lowercase_constants',
             ],
             [
-                'The rules contain unknown fixers: "no_multiline_whitespace_before_semicolons" is a renamed rule,  did you mean "multiline_whitespace_before_semicolons"?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "no_multiline_whitespace_before_semicolons" is a renamed rule,  did you mean "multiline_whitespace_before_semicolons"?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'no_multiline_whitespace_before_semicolons',
             ],
             [
-                'The rules contain unknown fixers: "no_short_echo_tag" is a renamed rule,  did you mean "echo_tag_syntax" (note: use configuration "[\'format\' => \'long\']")?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "no_short_echo_tag" is a renamed rule,  did you mean "echo_tag_syntax" (note: use configuration "[\'format\' => \'long\']")?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'no_short_echo_tag',
             ],
             [
-                'The rules contain unknown fixers: "php_unit_ordered_covers" is a renamed rule,  did you mean "phpdoc_order_by_value" (note: use configuration "[\'annotations\' => [\'covers\']]")?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "php_unit_ordered_covers" is a renamed rule,  did you mean "phpdoc_order_by_value" (note: use configuration "[\'annotations\' => [\'covers\']]")?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'php_unit_ordered_covers',
             ],
             [
-                'The rules contain unknown fixers: "phpdoc_inline_tag" is a renamed rule,  did you mean "general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type"?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "phpdoc_inline_tag" is a renamed rule,  did you mean "general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type"?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'phpdoc_inline_tag',
             ],
             [
-                'The rules contain unknown fixers: "pre_increment" is a renamed rule,  did you mean "increment_style" (note: use configuration "[\'style\' => \'pre\']")?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "pre_increment" is a renamed rule,  did you mean "increment_style" (note: use configuration "[\'style\' => \'pre\']")?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'pre_increment',
             ],
             [
-                'The rules contain unknown fixers: "psr0" is a renamed rule,  did you mean "psr_autoloading" (note: use configuration "[\'dir\' => \'x\']")?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "psr0" is a renamed rule,  did you mean "psr_autoloading" (note: use configuration "[\'dir\' => \'x\']")?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'psr0',
             ],
             [
-                'The rules contain unknown fixers: "psr4" is a renamed rule,  did you mean "psr_autoloading"?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "psr4" is a renamed rule,  did you mean "psr_autoloading"?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'psr4',
             ],
             [
-                'The rules contain unknown fixers: "silenced_deprecation_error" is a renamed rule,  did you mean "error_suppression"?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "silenced_deprecation_error" is a renamed rule,  did you mean "error_suppression"?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'silenced_deprecation_error',
             ],
             [
-                'The rules contain unknown fixers: "trailing_comma_in_multiline_array" is a renamed rule,  did you mean "trailing_comma_in_multiline" (note: use configuration "[\'elements\' => [\'arrays\']]")?' . PHP_EOL . PHP_EOL .
+                'The rules contain unknown fixers: "trailing_comma_in_multiline_array" is a renamed rule,  did you mean "trailing_comma_in_multiline" (note: use configuration "[\'elements\' => [\'arrays\']]")?'.PHP_EOL.PHP_EOL.
                 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'trailing_comma_in_multiline_array',
             ],
