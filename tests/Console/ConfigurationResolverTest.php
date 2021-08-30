@@ -1048,27 +1048,13 @@ For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGR
 For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
                 'silenced_deprecation_error',
             ],
-            
+            [
+                'The rules contain unknown fixers: "trailing_comma_in_multiline_array" is a renamed rule,  did you mean "trailing_comma_in_multiline" (note: use configuration "[\'elements\' => [\'arrays\']]")?
+
+For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
+                'trailing_comma_in_multiline_array',
+            ],
         ];
-    }
-
-    /**
-     * Test the renamed rule trailing_comma_in_multiline_array
-     * 
-     * @return void
-     */
-    public function testResolveRenamedRulesTrailingCommaInMultilineArrayWithUnknownRules(): void
-    {
-        $this->expectException(
-            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
-        );
-        $this->expectExceptionMessage(
-            'The rules contain unknown fixers: "trailing_comma_in_multiline_array" (did you mean "trailing_comma_in_multiline"?).'
-        );
-
-        $resolver = $this->createConfigurationResolver(['rules' => 'trailing_comma_in_multiline_array']);
-
-        $resolver->getRules();
     }
     
     public function testResolveRulesWithUnknownRules(): void
