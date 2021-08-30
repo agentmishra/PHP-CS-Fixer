@@ -769,10 +769,10 @@ final class ConfigurationResolver
             		'new_name' => 'error_suppression',
             		'config' => null    
             	],
-                'trailing_comma_in_multiline_array',
+                'trailing_comma_in_multiline_array' =>
             	[
             		'new_name' => 'trailing_comma_in_multiline',
-            		'config' => ['elements' => ['arrays']],  
+            		'config' => ['elements' => ['arrays']] 
             	]
             ];
             
@@ -780,9 +780,10 @@ final class ConfigurationResolver
 
             $message = 'The rules contain unknown fixers: ';
             foreach ($unknownFixers as $unknownFixer) {
-
+                
                 // Check if present as old renamed rule
                 if(isset($renamedRules[$unknownFixer])) {
+
                      $message .= sprintf(
                         '"%s" is a renamed rule, %s, ',
                         $unknownFixer,
