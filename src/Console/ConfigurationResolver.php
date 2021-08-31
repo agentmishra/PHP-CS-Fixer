@@ -772,7 +772,7 @@ final class ConfigurationResolver
                     $newRuleConfig = !empty($renamedRules[$unknownFixer]['config']) ? ' (note: use configuration "'.HelpCommand::toString($renamedRules[$unknownFixer]['config']).'")' : '';
                     
                     $message .= sprintf(
-                        '"%s" is a renamed rule,  did you mean "%s"%s?'.PHP_EOL.PHP_EOL,
+                        '"%s" is a renamed rule, did you mean "%s"%s?'.PHP_EOL.PHP_EOL,
                         $unknownFixer,
                         $newRuleName,
                         $newRuleConfig
