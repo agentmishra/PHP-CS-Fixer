@@ -33,7 +33,7 @@ final class SwitchCaseSemicolonToColonFixerTest extends AbstractFixerTestCase
         $this->doTest($expected, $input);
     }
 
-    public function provideFixCases()
+    public function provideFixCases(): \Generator
     {
         yield from [
             [
@@ -226,20 +226,8 @@ final class SwitchCaseSemicolonToColonFixerTest extends AbstractFixerTestCase
                 ',
             ];
         }
-    }
 
-    /**
-     * @dataProvider provideFix70Cases
-     * @requires PHP 7.0
-     */
-    public function testFix70(string $expected, ?string $input = null): void
-    {
-        $this->doTest($expected, $input);
-    }
-
-    public function provideFix70Cases()
-    {
-        return [
+        yield from [
             'nested switch in switch case' => [
                 '<?php
                     switch (1) {
@@ -276,7 +264,7 @@ final class SwitchCaseSemicolonToColonFixerTest extends AbstractFixerTestCase
         $this->doTest($expected, $input);
     }
 
-    public function provideFix80Cases()
+    public function provideFix80Cases(): array
     {
         return [
             'Simple match' => [

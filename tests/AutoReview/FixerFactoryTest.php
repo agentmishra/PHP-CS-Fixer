@@ -78,6 +78,7 @@ final class FixerFactoryTest extends TestCase
             [$fixers['braces'], $fixers['method_chaining_indentation']],
             [$fixers['class_attributes_separation'], $fixers['braces']],
             [$fixers['class_attributes_separation'], $fixers['indentation_type']],
+            [$fixers['class_attributes_separation'], $fixers['no_extra_blank_lines']],
             [$fixers['class_definition'], $fixers['braces']],
             [$fixers['class_keyword_remove'], $fixers['no_unused_imports']],
             [$fixers['combine_consecutive_issets'], $fixers['multiline_whitespace_before_semicolons']],
@@ -381,7 +382,7 @@ final class FixerFactoryTest extends TestCase
         static::assertSame($expected, $actual, sprintf('The ruleset of "%s" must contain the rules for the priority test.', $file));
     }
 
-    public function provideFixersPriorityPairsHaveIntegrationTestCases()
+    public function provideFixersPriorityPairsHaveIntegrationTestCases(): array
     {
         return array_filter(
             $this->provideFixersPriorityCases(),
@@ -454,9 +455,10 @@ final class FixerFactoryTest extends TestCase
         );
     }
 
-    public function provideIntegrationTestFilesCases()
+    public function provideIntegrationTestFilesCases(): array
     {
         $fileNames = [];
+
         foreach (new \DirectoryIterator($this->getIntegrationPriorityDirectory()) as $candidate) {
             if ($candidate->isDot()) {
                 continue;

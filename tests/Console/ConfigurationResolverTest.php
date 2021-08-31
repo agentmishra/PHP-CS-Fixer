@@ -130,7 +130,7 @@ final class ConfigurationResolverTest extends TestCase
         static::assertSame($progressType, $resolver->getProgress());
     }
 
-    public function provideProgressTypeCases()
+    public function provideProgressTypeCases(): array
     {
         return [
             ['none'],
@@ -195,7 +195,7 @@ final class ConfigurationResolverTest extends TestCase
         static::assertInstanceOf($expectedClass, $resolver->getConfig());
     }
 
-    public function provideResolveConfigFileDefaultCases()
+    public function provideResolveConfigFileDefaultCases(): array
     {
         $dirBase = $this->getFixtureDir();
 
@@ -297,7 +297,7 @@ final class ConfigurationResolverTest extends TestCase
         static::assertSame($expectedPaths, $resolver->getPath());
     }
 
-    public function providePathCases()
+    public function providePathCases(): \Generator
     {
         yield [
             ['Command'],
@@ -343,7 +343,7 @@ final class ConfigurationResolverTest extends TestCase
         $resolver->getPath();
     }
 
-    public function provideEmptyPathCases()
+    public function provideEmptyPathCases(): \Generator
     {
         yield [
             [''],
@@ -496,7 +496,7 @@ final class ConfigurationResolverTest extends TestCase
         static::assertSame($expected, $intersectionItems);
     }
 
-    public function provideResolveIntersectionOfPathsCases()
+    public function provideResolveIntersectionOfPathsCases(): array
     {
         $dir = __DIR__.'/../Fixtures/ConfigurationResolverPathsIntersection';
         $cb = static function (array $items) use ($dir) {
@@ -662,7 +662,7 @@ final class ConfigurationResolverTest extends TestCase
         static::assertSame($expectedResult, $resolver->configFinderIsOverridden());
     }
 
-    public function provideConfigFinderIsOverriddenCases()
+    public function provideConfigFinderIsOverriddenCases(): array
     {
         $root = __DIR__.'/../..';
 
@@ -955,104 +955,52 @@ final class ConfigurationResolverTest extends TestCase
     }
 
     /**
-     * Test the renamed rules.
+     * @param string[] $rules
      *
      * @dataProvider provideRenamedRulesCases
      */
-    public function testResolveRenamedRulesWithUnknownRules(string $expectedMessage, string $renamedRule): void
+    public function testResolveRenamedRulesWithUnknownRules(string $expectedMessage, array $rules): void
     {
-        $this->expectException(
-            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
-        );
+        $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage($expectedMessage);
 
-        $resolver = $this->createConfigurationResolver(['rules' => $renamedRule]);
-
+        $resolver = $this->createConfigurationResolver(['rules' => implode(',', $rules)]);
         $resolver->getRules();
     }
 
-    public function provideRenamedRulesCases()
+    public function provideRenamedRulesCases(): \Generator
     {
-        return [
-            [
-                'The rules contain unknown fixers: "blank_line_before_return" is a renamed rule, did you mean "blank_line_before_statement" (note: use configuration "[\'statements\' => [\'return\']]")?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'blank_line_before_return',
-            ],
-            [
-                'The rules contain unknown fixers: "final_static_access" is a renamed rule, did you mean "self_static_accessor"?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'final_static_access',
-            ],
-            [
-                'The rules contain unknown fixers: "hash_to_slash_comment" is a renamed rule, did you mean "single_line_comment_style" (note: use configuration "[\'comment_types\' => [\'hash\']]")?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'hash_to_slash_comment',
-            ],
-            [
-                'The rules contain unknown fixers: "lowercase_constants" is a renamed rule, did you mean "constant_case" (note: use configuration "[\'case\' => \'lower\']")?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'lowercase_constants',
-            ],
-            [
-                'The rules contain unknown fixers: "no_multiline_whitespace_before_semicolons" is a renamed rule, did you mean "multiline_whitespace_before_semicolons"?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'no_multiline_whitespace_before_semicolons',
-            ],
-            [
-                'The rules contain unknown fixers: "no_short_echo_tag" is a renamed rule, did you mean "echo_tag_syntax" (note: use configuration "[\'format\' => \'long\']")?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'no_short_echo_tag',
-            ],
-            [
-                'The rules contain unknown fixers: "php_unit_ordered_covers" is a renamed rule, did you mean "phpdoc_order_by_value" (note: use configuration "[\'annotations\' => [\'covers\']]")?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'php_unit_ordered_covers',
-            ],
-            [
-                'The rules contain unknown fixers: "phpdoc_inline_tag" is a renamed rule, did you mean "general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type"?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'phpdoc_inline_tag',
-            ],
-            [
-                'The rules contain unknown fixers: "pre_increment" is a renamed rule, did you mean "increment_style" (note: use configuration "[\'style\' => \'pre\']")?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'pre_increment',
-            ],
-            [
-                'The rules contain unknown fixers: "psr0" is a renamed rule, did you mean "psr_autoloading" (note: use configuration "[\'dir\' => \'x\']")?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'psr0',
-            ],
-            [
-                'The rules contain unknown fixers: "psr4" is a renamed rule, did you mean "psr_autoloading"?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'psr4',
-            ],
-            [
-                'The rules contain unknown fixers: "silenced_deprecation_error" is a renamed rule, did you mean "error_suppression"?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'silenced_deprecation_error',
-            ],
-            [
-                'The rules contain unknown fixers: "trailing_comma_in_multiline_array" is a renamed rule, did you mean "trailing_comma_in_multiline" (note: use configuration "[\'elements\' => [\'arrays\']]")?'.PHP_EOL.PHP_EOL.
-                'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules.',
-                'trailing_comma_in_multiline_array',
-            ],
+        yield 'with config' => [
+            'The rules contain unknown fixers: "blank_line_before_return" is renamed (did you mean "blank_line_before_statement"? (note: use configuration "[\'statements\' => [\'return\']]")).
+For more info about updating see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-ruless.',
+            ['blank_line_before_return'],
+        ];
+
+        yield 'without config' => [
+            'The rules contain unknown fixers: "final_static_access" is renamed (did you mean "self_static_accessor"?).
+For more info about updating see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-ruless.',
+            ['final_static_access'],
+        ];
+
+        yield [
+            'The rules contain unknown fixers: "hash_to_slash_comment" is renamed (did you mean "single_line_comment_style"? (note: use configuration "[\'comment_types\' => [\'hash\']]")).
+For more info about updating see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-ruless.',
+            ['hash_to_slash_comment'],
+        ];
+
+        yield 'both renamed and unknown' => [
+            'The rules contain unknown fixers: "final_static_access" is renamed (did you mean "self_static_accessor"?), "binary_operator_space" (did you mean "binary_operator_spaces"?).
+For more info about updating see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-ruless.',
+            ['final_static_access', 'binary_operator_space'],
         ];
     }
 
     public function testResolveRulesWithUnknownRules(): void
     {
-        $this->expectException(
-            \PhpCsFixer\ConfigurationException\InvalidConfigurationException::class
-        );
-        $this->expectExceptionMessage(
-            'The rules contain unknown fixers: "bar", "binary_operator_space" (did you mean "binary_operator_spaces"?).'
-        );
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The rules contain unknown fixers: "bar", "binary_operator_space" (did you mean "binary_operator_spaces"?).');
 
         $resolver = $this->createConfigurationResolver(['rules' => 'braces,-bar,binary_operator_space']);
-
         $resolver->getRules();
     }
 
@@ -1128,7 +1076,7 @@ final class ConfigurationResolverTest extends TestCase
         static::assertInstanceOf($expected, $resolver->getDiffer());
     }
 
-    public function provideDifferCases()
+    public function provideDifferCases(): array
     {
         return [
             [
@@ -1161,7 +1109,7 @@ final class ConfigurationResolverTest extends TestCase
 
     public function testDeprecationOfPassingOtherThanNoOrYes(): void
     {
-        $this->expectException(\PhpCsFixer\ConfigurationException\InvalidConfigurationException::class);
+        $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Expected "yes" or "no" for option "allow-risky", got "yes please".');
 
         $resolver = $this->createConfigurationResolver(['allow-risky' => 'yes please']);
@@ -1169,7 +1117,7 @@ final class ConfigurationResolverTest extends TestCase
         $resolver->getRiskyAllowed();
     }
 
-    public function provideResolveBooleanOptionCases()
+    public function provideResolveBooleanOptionCases(): array
     {
         return [
             [true, true, 'yes'],
@@ -1210,7 +1158,7 @@ final class ConfigurationResolverTest extends TestCase
         $resolver->getFixers();
     }
 
-    public function provideDeprecatedFixerConfiguredCases()
+    public function provideDeprecatedFixerConfiguredCases(): array
     {
         return [
             [true],
@@ -1219,7 +1167,7 @@ final class ConfigurationResolverTest extends TestCase
         ];
     }
 
-    public function provideGetDirectoryCases()
+    public function provideGetDirectoryCases(): array
     {
         return [
             [null, '/my/path/my/file', 'path/my/file'],
@@ -1259,20 +1207,20 @@ final class ConfigurationResolverTest extends TestCase
         return str_replace('/', \DIRECTORY_SEPARATOR, $path);
     }
 
-    private static function assertSameRules(array $expected, array $actual, string $message = ''): void
+    private static function assertSameRules(array $expected, array $actual): void
     {
         ksort($expected);
         ksort($actual);
 
-        static::assertSame($expected, $actual, $message);
+        static::assertSame($expected, $actual);
     }
 
-    private function getFixtureDir()
+    private function getFixtureDir(): string
     {
         return realpath(__DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'Fixtures'.\DIRECTORY_SEPARATOR.'ConfigurationResolverConfigFile'.\DIRECTORY_SEPARATOR).'/';
     }
 
-    private function createConfigurationResolver(array $options, Config $config = null, string $cwdPath = '')
+    private function createConfigurationResolver(array $options, Config $config = null, string $cwdPath = ''): ConfigurationResolver
     {
         if (null === $config) {
             $config = new Config();

@@ -46,7 +46,7 @@ final class PhpdocToReturnTypeFixerTest extends AbstractFixerTestCase
         $this->doTest($expected, $input);
     }
 
-    public function provideFixCases()
+    public function provideFixCases(): \Generator
     {
         yield from [
             'no phpdoc return' => [
@@ -219,6 +219,9 @@ final class PhpdocToReturnTypeFixerTest extends AbstractFixerTestCase
                 '<?php /** @return null|array */ function my_foo() {}',
                 70100,
             ],
+            'skip primitive or array types' => [
+                '<?php /** @return string|string[] */ function my_foo() {}',
+            ],
             'skip mixed nullable types' => [
                 '<?php /** @return null|Foo|Bar */ function my_foo() {}',
             ],
@@ -360,7 +363,7 @@ final class PhpdocToReturnTypeFixerTest extends AbstractFixerTestCase
         $this->doTest($expected, $input);
     }
 
-    public function provideFixPhp74Cases()
+    public function provideFixPhp74Cases(): array
     {
         return [
             'arrow function' => [
@@ -380,7 +383,7 @@ final class PhpdocToReturnTypeFixerTest extends AbstractFixerTestCase
         $this->doTest($expected, $input);
     }
 
-    public function provideFixPhp80Cases()
+    public function provideFixPhp80Cases(): \Generator
     {
         yield 'static' => [
             '<?php

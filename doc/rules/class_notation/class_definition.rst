@@ -74,21 +74,10 @@ Example #1
     {
     }
 
-Example #2
-~~~~~~~~~~
-
-*Default* configuration.
-
-.. code-block:: diff
-
-   --- Original
-   +++ New
-    <?php
-
    -$foo = new  class  extends  Bar  implements  Baz,  BarBaz {};
    +$foo = new class extends Bar implements Baz, BarBaz {};
 
-Example #3
+Example #2
 ~~~~~~~~~~
 
 With configuration: ``['single_line' => true]``.
@@ -105,7 +94,7 @@ With configuration: ``['single_line' => true]``.
    +class Foo extends Bar implements Baz, BarBaz
     {}
 
-Example #4
+Example #3
 ~~~~~~~~~~
 
 With configuration: ``['single_item_single_line' => true]``.
@@ -122,7 +111,7 @@ With configuration: ``['single_item_single_line' => true]``.
    +class Foo extends Bar implements Baz
     {}
 
-Example #5
+Example #4
 ~~~~~~~~~~
 
 With configuration: ``['multi_line_extends_each_single_line' => true]``.
@@ -140,7 +129,7 @@ With configuration: ``['multi_line_extends_each_single_line' => true]``.
    +    FooBarBaz
     {}
 
-Example #6
+Example #5
 ~~~~~~~~~~
 
 With configuration: ``['space_before_parenthesis' => true]``.
@@ -159,7 +148,9 @@ Rule sets
 The rule is part of the following rule sets:
 
 @PSR12
-  Using the `@PSR12 <./../../ruleSets/PSR12.rst>`_ rule set will enable the ``class_definition`` rule with the default config.
+  Using the `@PSR12 <./../../ruleSets/PSR12.rst>`_ rule set will enable the ``class_definition`` rule with the config below:
+
+  ``['space_before_parenthesis' => true]``
 
 @PSR2
   Using the `@PSR2 <./../../ruleSets/PSR2.rst>`_ rule set will enable the ``class_definition`` rule with the default config.

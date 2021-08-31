@@ -27,6 +27,228 @@ use PhpCsFixer\WhitespacesFixerConfig;
 final class ClassAttributesSeparationFixerTest extends AbstractFixerTestCase
 {
     /**
+     * @dataProvider provideFixCases
+     */
+    public function testFixCases(string $expected, ?string $input = null): void
+    {
+        $this->doTest($expected, $input);
+    }
+
+    public function provideFixCases(): \Generator
+    {
+        yield [
+            '<?php
+class Sample
+{
+private $a; // foo
+
+    /** second in a hour */
+    private $b;
+}
+',
+            '<?php
+class Sample
+{private $a; // foo
+    /** second in a hour */
+    private $b;
+}
+',
+        ];
+
+        yield 'empty class' => [
+            '<?php class Foo {}',
+        ];
+
+        yield 'simple top class' => [
+            '<?php class A {
+public function Foo(){}
+}',
+            '<?php class A {public function Foo(){}}',
+        ];
+
+        yield 'comment' => [
+            '<?php class A {
+/* function comment */
+public function Bar(){}
+}',
+            '<?php class A {/* function comment */public function Bar(){}
+}',
+        ];
+
+        yield 'comment, multiple lines' => [
+            '<?php class A {
+/* some comment */
+
+public function Bar(){}
+}',
+            '<?php class A {
+/* some comment */
+
+
+
+public function Bar(){}
+}',
+        ];
+
+        yield 'simple PHPDoc case' => [
+            '<?php class Foo
+{
+/** Doc 1 */
+public function A(){}
+
+    /** Doc 2 */
+    public function B(){}
+}',
+            '<?php class Foo
+{/** Doc 1 */public function A(){}
+
+    /** Doc 2 */
+
+    public function B(){}
+}',
+        ];
+
+        yield 'add a newline at the end of a class with trait group' => [
+            '<?php class A
+{
+    use Bar {
+        __construct as barConstruct;
+        baz as barBaz;
+    }
+}',
+            '<?php class A
+{
+    use Bar {
+        __construct as barConstruct;
+        baz as barBaz;
+    }}',
+        ];
+
+        yield 'add a newline at the end of a class with trait' => [
+            '<?php class A
+{
+    use A\B\C;
+}',
+            '<?php class A
+{
+    use A\B\C;}',
+        ];
+
+        yield 'removes extra lines at the end of an interface' => [
+            '<?php interface F
+{
+    public function A();
+}',
+            '<?php interface F
+{
+    public function A();
+
+
+}',
+        ];
+
+        yield 'removes extra lines at the end of an abstract class' => [
+            '<?php abstract class F
+{
+    public abstract function A();
+}',
+            '<?php abstract class F
+{
+    public abstract function A();
+
+
+}',
+        ];
+
+        yield 'add a newline at the end of a class' => [
+            '<?php class A
+{
+    public function A(){}
+}',
+            '<?php class A
+{
+    public function A(){}}',
+        ];
+
+        yield 'add a newline at the end of a class: with comments' => [
+            '<?php class A
+{
+    public const A = 1; /* foo */ /* bar */
+}',
+            '<?php class A
+{
+    public const A = 1; /* foo */ /* bar */}',
+        ];
+
+        yield 'add a newline at the end of a class: with comments with trailing space' => [
+            '<?php class A
+{
+    public const A = 1; /* foo */ /* bar */
+   }',
+            '<?php class A
+{
+    public const A = 1; /* foo */ /* bar */   }',
+        ];
+
+        $to = $from = '<?php ';
+
+        for ($i = 0; $i < 15; ++$i) {
+            $from .= sprintf('class A%d{public function GA%d(){return new class {public function B6B%d(){}};}public function otherFunction%d(){}}', $i, $i, $i, $i);
+            $to .= sprintf("class A%d{\npublic function GA%d(){return new class {\npublic function B6B%d(){}\n};}\n\npublic function otherFunction%d(){}\n}", $i, $i, $i, $i);
+        }
+
+        yield from [
+            [$to, $from],
+            [
+                '<?php $a = new class {
+                public function H(){}
+
+                public function B7(){}
+
+                private function C(){}
+                };',
+                '<?php $a = new class {
+                public function H(){}
+                public function B7(){}
+                private function C(){}
+                };',
+            ],
+            [
+                '<?php
+                    class A
+                    {
+public function getFilter()
+                        {
+                            return new class () implements FilterInterface {
+private $d = 123;
+
+                                public function pass($a, $b) {
+                                    echo $a;
+                                }
+
+                                public $e = 5;
+};}
+                    }
+                ',
+                '<?php
+                    class A
+                    {public function getFilter()
+                        {
+                            return new class () implements FilterInterface {private $d = 123;
+                                public function pass($a, $b) {
+                                    echo $a;
+                                }
+                                public $e = 5;};}
+
+
+
+                    }
+                ',
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider provideInvalidElementsCases
      */
     public function testInvalidElements(array $elements): void
@@ -52,7 +274,7 @@ final class ClassAttributesSeparationFixerTest extends AbstractFixerTestCase
         $method = new \ReflectionMethod($this->fixer, 'findCommentBlockStart');
         $method->setAccessible(true);
 
-        $result = $method->invoke($this->fixer, $tokens, $index);
+        $result = $method->invoke($this->fixer, $tokens, $index, 0);
         static::assertSame(
             $expected,
             $result,
@@ -60,7 +282,7 @@ final class ClassAttributesSeparationFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function provideCommentBlockStartDetectionCases()
+    public function provideCommentBlockStartDetectionCases(): array
     {
         return [
             [
@@ -145,7 +367,7 @@ final class ClassAttributesSeparationFixerTest extends AbstractFixerTestCase
         $this->doTest($expected, $input);
     }
 
-    public function provideFixClassesCases()
+    public function provideFixClassesCases(): array
     {
         $cases = [];
 
@@ -392,7 +614,6 @@ abstract class MethodTest2
      }
 
        abstract protected function method245();
-
     // comment
 
     final private function method345()
@@ -744,7 +965,7 @@ public function B1(); // allowed comment
         $this->doTest($expected, $input);
     }
 
-    public function provideFixTraitsCases()
+    public function provideFixTraitsCases(): array
     {
         $cases = [];
 
@@ -838,7 +1059,7 @@ trait SomeReturnInfo {
         $this->doTest($expected, $input);
     }
 
-    public function provideFixInterfaceCases()
+    public function provideFixInterfaceCases(): array
     {
         $cases = [];
         $cases[] = [
@@ -923,7 +1144,7 @@ class ezcReflectionMethod extends ReflectionMethod {
         $this->doTest($expected, $input);
     }
 
-    public function provideMessyWhitespacesCases()
+    public function provideMessyWhitespacesCases(): array
     {
         return [
             [
@@ -946,9 +1167,235 @@ class ezcReflectionMethod extends ReflectionMethod {
         $this->doTest($expected, $input);
     }
 
-    public function provideConfigCases()
+    public function provideConfigCases(): array
     {
         return [
+            'multi line property' => [
+                '<?php class Foo
+{
+     private $prop = [
+         1 => true,
+         2 => false,
+     ];
+
+ // comment2
+     private $bar = 1;
+}',
+                '<?php class Foo
+{
+     private $prop = [
+         1 => true,
+         2 => false,
+     ]; // comment2
+     private $bar = 1;
+}',
+                ['elements' => ['property' => 'one']],
+            ],
+            'trait group import none' => [
+                '<?php class Foo
+{
+    use Ao;
+    use B0 { X0 as Y0;} // test
+    use A;
+    use B { X as Y;} // test
+    use Char;
+    use Bar {
+        __construct as barConstruct;
+        baz as barBaz;
+    }
+    use Dua;
+}',
+                '<?php class Foo
+{
+    use Ao;
+
+    use B0 { X0 as Y0;} // test
+
+
+    use A;
+    use B { X as Y;} // test
+    use Char;
+
+    use Bar {
+        __construct as barConstruct;
+        baz as barBaz;
+    }
+    use Dua;
+}',
+                ['elements' => ['trait_import' => 'none']],
+            ],
+            [
+                '<?php
+class Foo
+{
+    /** A */
+    private $email;
+
+    private $foo0; #0 /* test */
+    private $foo1; #1
+    private $foo2; /* @2 */
+}',
+                '<?php
+class Foo
+{
+    /** A */
+
+    private $email;
+
+    private $foo0; #0 /* test */
+
+    private $foo1; #1
+
+    private $foo2; /* @2 */
+}',
+                ['elements' => ['property' => 'none']],
+            ],
+            [
+                '<?php
+ class Sample
+{
+    /** @var int */
+    const FOO = 1;
+
+    /** @var int */
+    const BAR = 2;
+
+    const BAZ = 3;
+    const OTHER = 4;
+    const OTHER2 = 5;
+}',
+                '<?php
+ class Sample
+{
+    /** @var int */
+    const FOO = 1;
+
+    /** @var int */
+    const BAR = 2;
+
+
+    const BAZ = 3;
+    const OTHER = 4;
+
+    const OTHER2 = 5;
+}',
+                ['elements' => ['const' => 'none']],
+            ],
+            'trait group import 5843' => [
+                '<?php
+            class Foo
+{
+    use Ao;
+
+    use B0 { X0 as Y0;} // test
+
+    use A;
+
+    use B { X as Y;} // test
+
+    use Char;
+
+    use Bar {
+        __construct as barConstruct;
+        baz as barBaz;
+    }
+
+    use Dua;
+
+    public function aaa()
+    {
+    }
+}',
+                '<?php
+            class Foo
+{
+    use Ao;
+    use B0 { X0 as Y0;} // test
+    use A;
+    use B { X as Y;} // test
+
+
+    use Char;
+    use Bar {
+        __construct as barConstruct;
+        baz as barBaz;
+    }
+    use Dua;
+    public function aaa()
+    {
+    }
+}',
+                ['elements' => ['method' => 'one', 'trait_import' => 'one']],
+            ],
+            [
+                '<?php
+class Foo
+{
+    use SomeTrait1;
+
+    use SomeTrait2;
+
+    public function Bar(){}
+}
+',
+                '<?php
+class Foo
+{
+    use SomeTrait1;
+    use SomeTrait2;
+    public function Bar(){}
+}
+',
+                ['elements' => ['method' => 'one', 'trait_import' => 'one']],
+            ],
+            'trait group import 5852' => [
+                '<?php
+class Foo
+{
+    use A;
+    use B;
+
+    /**
+     *
+     */
+     public function A(){}
+}',
+                '<?php
+class Foo
+{
+    use A;
+
+    use B;
+
+    /**
+     *
+     */
+
+     public function A(){}
+}',
+                ['elements' => ['const' => 'one', 'method' => 'one', 'property' => 'one', 'trait_import' => 'none']],
+            ],
+            [
+                '<?php
+abstract class Example
+{
+    use SomeTrait;
+    use AnotherTrait;
+
+    public $property;
+
+    abstract public function method(): void;
+}',
+                '<?php
+abstract class Example
+{
+    use SomeTrait;
+    use AnotherTrait;
+    public $property;
+    abstract public function method(): void;
+}',
+                ['elements' => ['const' => 'one', 'method' => 'one', 'property' => 'one']],
+            ],
             [
                 '<?php
                     class A
@@ -956,6 +1403,8 @@ class ezcReflectionMethod extends ReflectionMethod {
                         private $a = null;
 
                         public $b = 1;
+
+
 
                         function A() {}
                      }
@@ -1147,6 +1596,7 @@ class ezcReflectionMethod extends ReflectionMethod {
                 '<?php
                     class A
                     {
+                        const B = 2;
                         const FOO = 1;
                         const BAR = 2;
 
@@ -1155,11 +1605,15 @@ class ezcReflectionMethod extends ReflectionMethod {
 
                         /** @var int */
                         const NEW = 4;
+
+                        /** @var int */
+                        const A = 5;
                     }
                 ',
                 '<?php
                     class A
                     {
+                        const B = 2;
                         const FOO = 1;
 
                         const BAR = 2;
@@ -1168,6 +1622,8 @@ class ezcReflectionMethod extends ReflectionMethod {
                         const BAZ = 3;
                         /** @var int */
                         const NEW = 4;
+                        /** @var int */
+                        const A = 5;
                     }
                 ',
                 ['elements' => ['const' => 'only_if_meta']],
@@ -1271,74 +1727,30 @@ class ezcReflectionMethod extends ReflectionMethod {
                 ',
                 ['elements' => ['const' => 'only_if_meta', 'property' => 'only_if_meta', 'method' => 'only_if_meta']],
             ],
-        ];
-    }
-
-    /**
-     * @dataProvider provideFix70Cases
-     * @requires PHP 7.0
-     */
-    public function testFix70(string $expected, ?string $input = null): void
-    {
-        $this->doTest($expected, $input);
-    }
-
-    public function provideFix70Cases()
-    {
-        $to = $from = '<?php ';
-
-        for ($i = 0; $i < 15; ++$i) {
-            $from .= sprintf('class A%d{public function GA%d(){return new class {public function B6B%d(){}};}public function otherFunction%d(){}}', $i, $i, $i, $i);
-            $to .= sprintf("class A%d{\npublic function GA%d(){return new class {\npublic function B6B%d(){}\n};}\n\npublic function otherFunction%d(){}\n}", $i, $i, $i, $i);
-        }
-
-        return [
-            [$to, $from],
-            [
-                '<?php $a = new class {
-                public function H(){}
-
-                public function B7(){}
-
-                private function C(){}
-                };',
-                '<?php $a = new class {
-                public function H(){}
-                public function B7(){}
-                private function C(){}
-                };',
-            ],
             [
                 '<?php
                     class A
                     {
-public function getFilter()
-                        {
-                            return new class () implements FilterInterface {
-private $d = 123;
+                        use A;
+                        use B;
 
-                                public function pass($a, $b) {
-                                    echo $a;
-                                }
-
-                                public $e = 5;
-};}
+                        private $a = null;
+                        public $b = 1;
                     }
                 ',
                 '<?php
                     class A
-                    {public function getFilter()
-                        {
-                            return new class () implements FilterInterface {private $d = 123;
-                                public function pass($a, $b) {
-                                    echo $a;
-                                }
-                                public $e = 5;};}
+                    {
+                        use A;
 
+                        use B;
 
+                        private $a = null;
 
+                        public $b = 1;
                     }
                 ',
+                ['elements' => ['property' => 'none', 'trait_import' => 'none']],
             ],
         ];
     }
@@ -1355,7 +1767,7 @@ private $d = 123;
         $this->doTest($expected, $input);
     }
 
-    public function provideFix71Cases()
+    public function provideFix71Cases(): array
     {
         return [
             [
@@ -1392,13 +1804,16 @@ private $d = 123;
      * @dataProvider provideFix74Cases
      * @requires PHP 7.4
      */
-    public function testFix74(string $expected, ?string $input, array $config): void
+    public function testFix74(string $expected, ?string $input = null, array $config = null): void
     {
-        $this->fixer->configure($config);
+        if (null !== $config) {
+            $this->fixer->configure($config);
+        }
+
         $this->doTest($expected, $input);
     }
 
-    public function provideFix74Cases()
+    public function provideFix74Cases(): \Generator
     {
         yield [
             '<?php
@@ -1418,7 +1833,6 @@ private $d = 123;
                 public iterable $baz;
                 var ? Foo\Bar $qux;
             }',
-            ['elements' => ['property' => 'one']],
         ];
 
         yield [
@@ -1433,7 +1847,6 @@ private $d = 123;
                 private array $foo;
                 private array $bar;
             }',
-            ['elements' => ['property' => 'one']],
         ];
 
         yield [
@@ -1479,13 +1892,16 @@ private $d = 123;
      * @dataProvider provideFixPhp80Cases
      * @requires PHP 8.0
      */
-    public function testFixPhp80(string $expected, ?string $input, array $config): void
+    public function testFixPhp80(string $expected, ?string $input, array $config = null): void
     {
-        $this->fixer->configure($config);
+        if (null !== $config) {
+            $this->fixer->configure($config);
+        }
+
         $this->doTest($expected, $input);
     }
 
-    public function provideFixPhp80Cases()
+    public function provideFixPhp80Cases(): \Generator
     {
         yield 'attributes' => [
             '<?php
@@ -1524,7 +1940,6 @@ class User1
 
 
 }',
-            ['elements' => ['property' => 'one']],
         ];
 
         yield 'attributes minimal' => [
@@ -1535,17 +1950,15 @@ class User2{
 }',
             '<?php
 class User2{#[ORM\Id, ORM\Column("integer"), ORM\GeneratedValue] private $id;}',
-            ['elements' => ['property' => 'one']],
         ];
 
-        yield 'attributes not blocks' => [
+        yield 'attribute block' => [
             '<?php
 class User3
 {
     private $id;
 
     #[ORM\Column("string")]
-
     #[Assert\Email(["message" => "Foo"])]
  private $email;
 }',
@@ -1555,10 +1968,8 @@ class User3
 {
     private $id;
     #[ORM\Column("string")]
-
     #[Assert\Email(["message" => "Foo"])] private $email;
 }',
-            ['elements' => ['property' => 'one']],
         ];
 
         yield 'constructor property promotion' => [
@@ -1584,7 +1995,6 @@ class User3
                     private float $z = 0.0,
                 ) {}
             }',
-            ['elements' => ['property' => 'one', 'method' => 'one']],
         ];
 
         yield 'typed properties' => [
@@ -1605,7 +2015,6 @@ class User3
                 private int | float | null $c;
                 private int | float | null $d;
             }',
-            ['elements' => ['property' => 'one']],
         ];
 
         yield 'attributes with conditional spacing' => [
@@ -1681,6 +2090,30 @@ class User
 ',
             ['elements' => ['property' => 'only_if_meta']],
         ];
+
+        yield [
+            '<?php
+class Foo
+{
+    #[Assert\Email(["message" => "Foo"])]
+    private $email;
+
+    private $foo1; #1
+    private $foo2; /* @2 */
+}',
+            '<?php
+class Foo
+{
+    #[Assert\Email(["message" => "Foo"])]
+
+    private $email;
+
+    private $foo1; #1
+
+    private $foo2; /* @2 */
+}',
+            ['elements' => ['property' => 'none']],
+        ];
     }
 
     /**
@@ -1698,7 +2131,6 @@ class User
 class Foo
 {
     use SomeTrait1;
-
     use SomeTrait2;
 
     public function Bar(){}
@@ -1708,6 +2140,7 @@ class Foo
 class Foo
 {
     use SomeTrait1;
+
     use SomeTrait2;
     public function Bar(){}
 }

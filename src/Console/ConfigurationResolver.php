@@ -592,9 +592,7 @@ final class ConfigurationResolver
     private function getFormat(): string
     {
         if (null === $this->format) {
-            $this->format = null === $this->options['format']
-                ? $this->getConfig()->getFormat()
-                : $this->options['format'];
+            $this->format = $this->options['format'] ?? $this->getConfig()->getFormat();
         }
 
         return $this->format;
@@ -678,6 +676,7 @@ final class ConfigurationResolver
          * @see RuleSet::resolveSet()
          */
         $ruleSet = [];
+
         foreach ($rules as $key => $value) {
             if (\is_int($key)) {
                 throw new InvalidConfigurationException(sprintf('Missing value for "%s" rule/set.', $value));
@@ -685,6 +684,7 @@ final class ConfigurationResolver
 
             $ruleSet[$key] = true;
         }
+
         $ruleSet = new RuleSet($ruleSet);
 
         /** @var string[] $configuredFixers */
@@ -710,7 +710,6 @@ final class ConfigurationResolver
                 ],
                 'final_static_access' => [
                     'new_name' => 'self_static_accessor',
-                    'config' => null,
                 ],
                 'hash_to_slash_comment' => [
                     'new_name' => 'single_line_comment_style',
@@ -722,11 +721,9 @@ final class ConfigurationResolver
                 ],
                 'no_extra_consecutive_blank_lines' => [
                     'new_name' => 'no_extra_blank_lines',
-                    'config' => null,
                 ],
                 'no_multiline_whitespace_before_semicolons' => [
                     'new_name' => 'multiline_whitespace_before_semicolons',
-                    'config' => null,
                 ],
                 'no_short_echo_tag' => [
                     'new_name' => 'echo_tag_syntax',
@@ -738,7 +735,6 @@ final class ConfigurationResolver
                 ],
                 'phpdoc_inline_tag' => [
                     'new_name' => 'general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type',
-                    'config' => null,
                 ],
                 'pre_increment' => [
                     'new_name' => 'increment_style',
@@ -750,11 +746,9 @@ final class ConfigurationResolver
                 ],
                 'psr4' => [
                     'new_name' => 'psr_autoloading',
-                    'config' => null,
                 ],
                 'silenced_deprecation_error' => [
                     'new_name' => 'error_suppression',
-                    'config' => null,
                 ],
                 'trailing_comma_in_multiline_array' => [
                     'new_name' => 'trailing_comma_in_multiline',
@@ -762,24 +756,20 @@ final class ConfigurationResolver
                 ],
             ];
 
-            $matcher = new WordMatcher($availableFixers);
-
             $message = 'The rules contain unknown fixers: ';
+            $hasOldRule = false;
+
             foreach ($unknownFixers as $unknownFixer) {
-                // Check if present as old renamed rule
-                if (isset($renamedRules[$unknownFixer])) {
-                    $newRuleName = $renamedRules[$unknownFixer]['new_name'];
-                    $newRuleConfig = !empty($renamedRules[$unknownFixer]['config']) ? ' (note: use configuration "'.HelpCommand::toString($renamedRules[$unknownFixer]['config']).'")' : '';
-
+                if (isset($renamedRules[$unknownFixer])) { // Check if present as old renamed rule
+                    $hasOldRule = true;
                     $message .= sprintf(
-                        '"%s" is a renamed rule, did you mean "%s"%s?'.PHP_EOL.PHP_EOL,
+                        '"%s" is renamed (did you mean "%s"?%s), ',
                         $unknownFixer,
-                        $newRuleName,
-                        $newRuleConfig
+                        $renamedRules[$unknownFixer]['new_name'],
+                        isset($renamedRules[$unknownFixer]['config']) ? ' (note: use configuration "'.HelpCommand::toString($renamedRules[$unknownFixer]['config']).'")' : ''
                     );
-
-                    $message .= 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-ruless.';
                 } else { // Go to normal matcher if it is not a renamed rule
+                    $matcher = new WordMatcher($availableFixers);
                     $alternative = $matcher->match($unknownFixer);
                     $message .= sprintf(
                         '"%s"%s, ',
@@ -789,7 +779,13 @@ final class ConfigurationResolver
                 }
             }
 
-            throw new InvalidConfigurationException(substr($message, 0, -2).'.');
+            $message = substr($message, 0, -2).'.';
+
+            if ($hasOldRule) {
+                $message .= "\nFor more info about updating see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-ruless.";
+            }
+
+            throw new InvalidConfigurationException($message);
         }
 
         foreach ($fixers as $fixer) {
