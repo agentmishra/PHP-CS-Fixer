@@ -768,12 +768,17 @@ final class ConfigurationResolver
             foreach ($unknownFixers as $unknownFixer) {
                 // Check if present as old renamed rule
                 if (isset($renamedRules[$unknownFixer])) {
+                    $newRuleName = $renamedRules[$unknownFixer]['new_name'];
+                    $newRuleConfig = !empty($renamedRules[$unknownFixer]['config']) ? ' (note: use configuration "'.HelpCommand::toString($renamedRules[$unknownFixer]['config']).'")' : '';
+                    
                     $message .= sprintf(
-                        '"%s" is a renamed rule, %s, ',
+                        '"%s" is a renamed rule,  did you mean "%s"%s?'.PHP_EOL.PHP_EOL,
                         $unknownFixer,
-                        ' did you mean "'.$renamedRules[$unknownFixer]['new_name'].'"'.(!empty($renamedRules[$unknownFixer]['config']) ? ' (note: use configuration "'.HelpCommand::toString($renamedRules[$unknownFixer]['config']).'")' : '').'?'.PHP_EOL.PHP_EOL.
-                        'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-rules'
+                        $newRuleName,
+                        $newRuleConfig
                     );
+                    
+                    $message .= 'For more info see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-ruless.';
                 } else { // Go to normal matcher if it is not a renamed rule
                     $alternative = $matcher->match($unknownFixer);
                     $message .= sprintf(
