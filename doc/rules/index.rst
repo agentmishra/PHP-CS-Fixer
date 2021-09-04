@@ -513,6 +513,8 @@ Strict
 
 - `declare_strict_types <./strict/declare_strict_types.rst>`_ *(risky)*
     Force strict types declaration in all files. Requires PHP >= 7.0.
+- `declare_strict_types_position <./strict/declare_strict_types_position.rst>`_
+    Move the strict type declaration to the configured location. Requires PHP >= 7.0.
 - `strict_comparison <./strict/strict_comparison.rst>`_ *(risky)*
     Comparisons should be strict.
 - `strict_param <./strict/strict_param.rst>`_ *(risky)*
