@@ -13,9 +13,11 @@
 namespace PhpCsFixer\Fixer\Strict;
 
 use PhpCsFixer\AbstractFixer;
-use PhpCsFixer\Fixer\ConfigurationDefinitionFixerInterface;
+use PhpCsFixer\Fixer\ConfigurableFixerInterface;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
 use PhpCsFixer\FixerConfiguration\FixerConfigurationResolver;
+use PhpCsFixer\FixerConfiguration\FixerConfigurationResolverInterface;
+use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\VersionSpecification;
@@ -26,7 +28,7 @@ use PhpCsFixer\Tokenizer\Tokens;
 /**
  * @author Aidan Woods
  */
-final class DeclareStrictTypesPositionFixer extends AbstractFixer implements ConfigurationDefinitionFixerInterface, WhitespacesAwareFixerInterface
+final class DeclareStrictTypesPositionFixer extends AbstractFixer implements WhitespacesAwareFixerInterface, ConfigurableFixerInterface
 {
     /**
      * @internal
@@ -41,7 +43,7 @@ final class DeclareStrictTypesPositionFixer extends AbstractFixer implements Con
     /**
      * {@inheritdoc}
      */
-    public function getDefinition()
+    public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
             'Move the strict type declaration to the configured location. Requires PHP >= 7.0.',
@@ -58,7 +60,7 @@ final class DeclareStrictTypesPositionFixer extends AbstractFixer implements Con
     /**
      * {@inheritdoc}
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         // must ran before SingleBlankLineBeforeNamespaceFixer, BlankLineAfterOpeningTagFixer and DeclareEqualNormalizeFixer.
         return 2;
@@ -67,7 +69,7 @@ final class DeclareStrictTypesPositionFixer extends AbstractFixer implements Con
     /**
      * {@inheritdoc}
      */
-    public function isCandidate(Tokens $tokens)
+    public function isCandidate(Tokens $tokens): bool
     {
         return PHP_VERSION_ID >= 70000 && $tokens[0]->isGivenKind(T_OPEN_TAG);
     }
@@ -75,12 +77,12 @@ final class DeclareStrictTypesPositionFixer extends AbstractFixer implements Con
     /**
      * {@inheritdoc}
      */
-    public function isRisky()
+    public function isRisky(): bool
     {
         return false;
     }
 
-    protected function createConfigurationDefinition()
+    protected function createConfigurationDefinition(): FixerConfigurationResolverInterface
     {
         return new FixerConfigurationResolver([
             (new FixerOptionBuilder('relocate_to', 'Whether `declare(strict_types=1)` should be placed on "next" or "same" line, after the opening `<?php` tag.'))
@@ -93,7 +95,7 @@ final class DeclareStrictTypesPositionFixer extends AbstractFixer implements Con
     /**
      * {@inheritdoc}
      */
-    protected function applyFix(\SplFileInfo $file, Tokens $tokens)
+    protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         // check if the declaration is already done
         $searchIndex = $tokens->getNextMeaningfulToken(0);
@@ -112,7 +114,7 @@ final class DeclareStrictTypesPositionFixer extends AbstractFixer implements Con
     /**
      * @return Token[]
      */
-    protected function getDeclareStrictTypeSequence()
+    public function getDeclareStrictTypeSequence()
     {
         static $sequence = null;
 
