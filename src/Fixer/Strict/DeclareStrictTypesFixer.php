@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace PhpCsFixer\Fixer\Strict;
 
 use PhpCsFixer\AbstractFixer;
-use PhpCsFixer\Fixer\ConfigurationDefinitionFixerInterface;
+use PhpCsFixer\FixerConfiguration\FixerConfigurationResolverInterface;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
@@ -83,7 +83,7 @@ final class DeclareStrictTypesFixer extends AbstractFixer implements Whitespaces
         return true;
     }
 
-    protected function createConfigurationDefinition()
+    protected function createConfigurationDefinition(): FixerConfigurationResolverInterface
     {
         return new FixerConfigurationResolver([
             (new FixerOptionBuilder('add_missing', 'Whether to add missing ``declare(strict_types=1)`` to file, and to correct casing.'))
@@ -105,19 +105,24 @@ final class DeclareStrictTypesFixer extends AbstractFixer implements Whitespaces
         // check if the declaration is already done
         $searchIndex = $tokens->getNextMeaningfulToken(0);
         $sequence = $this->getDeclareStrictTypeSequence();
-        $sequenceLocation = $tokens->findSequence($sequence, $searchIndex, null, false);
+        
+        if (null !== $sequence && null != $searchIndex) {
+			$sequenceLocation = $tokens->findSequence($sequence, $searchIndex, null, false);
+		}
 
-        if (null === $searchIndex) {
-            if ($this->configuration['add_missing']) {
-                $this->insertSequence($tokens); // declaration not found, insert one
-            }
-        } elseif (null === $sequenceLocation) {
-            if ($this->configuration['add_missing']) {
-                $this->insertSequence($tokens); // declaration not found, insert one
-            }
-        } elseif ($this->configuration['add_missing']) {
-            $this->fixStrictTypesCasing($tokens, $sequenceLocation);
-        }
+		if (null !== $this->configuration) {
+			if (null === $searchIndex) {
+				if ($this->configuration['add_missing']) {
+					$this->insertSequence($tokens); // declaration not found, insert one
+				}
+			} elseif (null === $sequenceLocation) {
+				if ($this->configuration['add_missing']) {
+					$this->insertSequence($tokens); // declaration not found, insert one
+				}
+			} elseif ($this->configuration['add_missing']) {
+				$this->fixStrictTypesCasing($tokens, $sequenceLocation);
+			}
+		}
 
         // // check if the declaration is already done
         $searchIndex = $tokens->getNextMeaningfulToken(0);
@@ -142,7 +147,6 @@ final class DeclareStrictTypesFixer extends AbstractFixer implements Whitespaces
         if (null !== $sequenceLocation && false !== $this->configuration['relocate_to']) {
             $this->fixLocation($tokens, $sequenceLocation);
         }
-    }
 
         $this->fixStrictTypesCasingAndValue($tokens, $sequenceLocation);
     }
@@ -230,5 +234,30 @@ final class DeclareStrictTypesFixer extends AbstractFixer implements Whitespaces
 
         $end = self::LINE_NEXT === $this->configuration['relocate_to'] ? $lineEnding : ' ';
         $tokens[0] = new Token([$tokens[0]->getId(), rtrim($tokens[0]->getContent()).$end]);
+    }
+    
+    /**
+     * @return Token[]
+     */
+    public function getDeclareStrictTypeSequence()
+    {
+        static $sequence = null;
+
+        // do not look for open tag, closing semicolon or empty lines;
+        // - open tag is tested by isCandidate
+        // - semicolon or end tag must be there to be valid PHP
+        // - empty tokens and comments are dealt with later
+        if (null === $sequence) {
+            $sequence = [
+                new Token([T_DECLARE, 'declare']),
+                new Token('('),
+                new Token([T_STRING, 'strict_types']),
+                new Token('='),
+                new Token([T_LNUMBER, '1']),
+                new Token(')'),
+            ];
+        }
+
+        return $sequence;
     }
 }
